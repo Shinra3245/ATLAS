@@ -25,6 +25,11 @@
     "@vitejs/plugin-react": "5.0.4",
     "vite": "7.3.6"
   },
+  "overrides": {
+    "@firebase/firestore": {
+      "@grpc/grpc-js": "1.13.6"
+    }
+  },
   "engines": {
     "node": ">=22.12.0"
   }
