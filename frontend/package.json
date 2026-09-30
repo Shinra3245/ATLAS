@@ -1,0 +1,30 @@
+{
+  "name": "atlas-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/unit/*.test.mjs",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@blobatar/react": "2.7.0",
+    "@fontsource/manrope": "5.2.8",
+    "blobatar": "2.7.0",
+    "leaflet": "1.9.4",
+    "lucide-react": "0.468.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2",
+    "@vitejs/plugin-react": "5.0.4",
+    "vite": "7.3.6"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

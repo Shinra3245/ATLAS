@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.local/contracts/engine_result.schema.json",
+  "title": "ATLAS Engine Result v1",
+  "description": "Esquema del resultado del motor analítico (Bloque 2). Prohibidas por diseño las claves de puntuación global o de ganador.",
+  "type": "object",
+  "$defs": {
+    "conditionStatus": {
+      "type": "string",
+      "enum": [
+        "DATA_AVAILABLE",
+        "PARTIAL_DATA",
+        "INSUFFICIENT_DATA",
+        "NO_REGISTERED_CONDITION",
+        "OUTSIDE_SUPPORTED_AREA",
+        "BLOCKED_DATA_VALIDATION"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "enum": ["hazard", "hazard_history", "territorial_factor", "context", "derived"]
+    },
+    "temporalContext": {
+      "type": "string",
+      "enum": ["current", "historical", "reference_period", "not_applicable", "unknown"]
+    },
+    "coverageState": {
+      "type": "string",
+      "enum": ["available", "partial", "missing", "not_applicable"]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["primary", "secondary", "contextual", "not_applicable"]
+    },
+    "source": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "institution": { "type": ["string", "null"] },
+        "dataset": { "type": ["string", "null"] },
+        "date_or_version": { "type": ["string", "null"] },
+        "coverage_note": { "type": ["string", "null"] },
+        "is_test_fixture": { "type": "boolean" }
+      },
+      "required": ["id", "name", "is_test_fixture"],
+      "additionalProperties": false
+    },
+    "explanation": {
+      "type": "object",
+      "properties": {
+        "found": { "type": "string" },
+        "data_origin": { "type": "string" },
+        "operation": { "type": "string" },
+        "meaning": { "type": "string" },
+        "not_meaning": { "type": "string" },
+        "limitation": { "type": "string" }
+      },
+      "required": ["found", "data_origin", "operation", "meaning", "not_meaning", "limitation"],
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "state": { "$ref": "#/$defs/coverageState" },
+        "detail": { "type": ["string", "null"] }
+      },
+      "required": ["state"],
+      "additionalProperties": false
+    },
+    "condition": {
+      "type": "object",
+      "properties": {
+        "factor": { "type": "string" },
+        "label": { "type": "string" },
+        "category": { "$ref": "#/$defs/category" },
+        "status": { "$ref": "#/$defs/conditionStatus" },
+        "coverage": { "$ref": "#/$defs/coverage" },
+        "temporal_context": { "$ref": "#/$defs/temporalContext" },
+        "explanation": { "$ref": "#/$defs/explanation" },
+        "value": {},
+        "unit": { "type": ["string", "null"] },
+        "source": { "$ref": "#/$defs/source" },
+        "limitations": { "type": "array", "items": { "type": "string" } },
+        "priority": { "$ref": "#/$defs/priority" },
+        "review_items": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": [
+        "factor",
+        "label",
+        "category",
+        "status",
+        "coverage",
+        "temporal_context",
+        "explanation",
+        "value",
+        "unit",
+        "source",
+        "limitations",
+        "priority",
+        "review_items"
+      ],
+      "additionalProperties": false
+    },
+    "resolvedLocation": {
+      "type": "object",
+      "properties": {
+        "lat": { "type": "number" },
+        "lon": { "type": "number" },
+        "municipality": { "type": ["string", "null"] },
+        "area_status": { "type": "string", "enum": ["supported", "outside_supported_area"] },
+        "analysis_unit": { "type": "string", "enum": ["locality", "continuous_layer", "undetermined"] },
+        "locality_id": { "type": ["string", "null"] },
+        "label": { "type": ["string", "null"] },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["lat", "lon", "municipality", "area_status", "analysis_unit", "notes"],
+      "additionalProperties": false
+    },
+    "coverageSummary": {
+      "type": "object",
+      "properties": {
+        "expected": { "type": "integer" },
+        "data_available": { "type": "integer" },
+        "partial_data": { "type": "integer" },
+        "insufficient_data": { "type": "integer" },
+        "no_registered_condition": { "type": "integer" },
+        "blocked_data_validation": { "type": "integer" },
+        "by_category": { "type": "object" }
+      },
+      "required": [
+        "expected",
+        "data_available",
+        "partial_data",
+        "insufficient_data",
+        "no_registered_condition",
+        "blocked_data_validation",
+        "by_category"
+      ],
+      "additionalProperties": false
+    },
+    "ml": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "const": false },
+        "status": {
+          "type": "string",
+          "enum": ["DISABLED_PENDING_TARGET_VALIDATION", "HISTORICAL_EXPERIMENT", "ENABLED"]
+        },
+        "reason": { "type": "string" }
+      },
+      "required": ["enabled", "status", "reason"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "analysis_id": { "type": "string" },
+    "schema_version": { "type": "string", "const": "engine_result/v1" },
+    "engine_version": { "type": "string" },
+    "project_type": { "type": "string", "enum": ["housing", "building", "road"] },
+    "location": { "$ref": "#/$defs/resolvedLocation" },
+    "conditions": { "type": "array", "items": { "$ref": "#/$defs/condition" } },
+    "territorial_factors": { "type": "array", "items": { "$ref": "#/$defs/condition" } },
+    "context": { "type": "array", "items": { "$ref": "#/$defs/condition" } },
+    "coverage": { "$ref": "#/$defs/coverageSummary" },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "review_items": { "type": "array", "items": { "type": "string" } },
+    "ml": { "$ref": "#/$defs/ml" },
+    "disclaimer": { "type": "string" }
+  },
+  "required": [
+    "analysis_id",
+    "schema_version",
+    "engine_version",
+    "project_type",
+    "location",
+    "conditions",
+    "territorial_factors",
+    "context",
+    "coverage",
+    "sources",
+    "limitations",
+    "review_items",
+    "ml",
+    "disclaimer"
+  ],
+  "not": {
+    "anyOf": [
+      { "required": ["overall_risk_percent"] },
+      { "required": ["global_risk_score"] },
+      { "required": ["safety_score"] },
+      { "required": ["feasibility_score"] },
+      { "required": ["winner"] },
+      { "required": ["best_location"] }
+    ]
+  },
+  "additionalProperties": false
+}

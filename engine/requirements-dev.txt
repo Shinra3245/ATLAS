@@ -1,0 +1,14 @@
+# Dependencias de DESARROLLO del Bloque 2 (motor analítico).
+# El núcleo del motor (engine/) usa solo la biblioteca estándar de Python.
+# Estas dependencias son únicamente para ejecutar la suite de pruebas.
+#
+# Instalación local (sin instalar globalmente):
+#   python3 -m venv engine/.venv
+#   engine/.venv/bin/pip install -r engine/requirements-dev.txt
+#
+# El módulo ML (ml/) permanece DISABLED_PENDING_TARGET_VALIDATION; sus
+# dependencias (pandas, scikit-learn, etc.) NO se instalan todavía y se
+# declararán por separado solo si el gate de validación de ML se supera.
+
+pytest>=8.0
+jsonschema>=4.0

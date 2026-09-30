@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ATLAS layer manifest item V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "code",
+    "title",
+    "category",
+    "source_id",
+    "date",
+    "crs",
+    "coverage",
+    "unit",
+    "limitation",
+    "status",
+    "analysis_unit",
+    "available",
+    "expected",
+    "continuous_geometry"
+  ],
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    },
+    "crs": {
+      "type": "string"
+    },
+    "coverage": {
+      "type": "string"
+    },
+    "unit": {
+      "type": "string"
+    },
+    "limitation": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "analysis_unit": {
+      "type": "string"
+    },
+    "available": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "expected": {
+      "type": "integer",
+      "const": 755
+    },
+    "continuous_geometry": {
+      "type": "boolean",
+      "const": false
+    }
+  }
+}

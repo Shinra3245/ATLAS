@@ -1,0 +1,49 @@
+{
+  "checked_at": "2026-09-30T03:27:57.264261+00:00",
+  "status": "PASS",
+  "scope": "Datos publicados, motor, API y HTTP. Frontend y validación profesional excluidos.",
+  "data_tests": 27,
+  "engine_api_tests": 102,
+  "total_automated_tests": 129,
+  "http_checks": 14,
+  "phases": [
+    {
+      "phase": "datos: reconstrucción, integridad y pruebas",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "scripts/data/verify_v1.py"
+      ],
+      "output_tail": "Published 755 locality records, 50 station-month records and 57 municipal-context fields. Incoming/raw unchanged.\ntest_coordinate_conflict_is_rejected (test_pipeline.MunicipalValidationTests.test_coordinate_conflict_is_rejected) ... ok\ntest_duplicate_header_is_rejected (test_pipeline.MunicipalValidationTests.test_duplicate_header_is_rejected) ... ok\ntest_duplicate_locality_is_rejected (test_pipeline.MunicipalValidationTests.test_duplicate_locality_is_rejected) ... ok\ntest_local_values_cannot_masquerade_as_municipal_context (test_pipeline.MunicipalValidationTests.test_local_values_cannot_masquerade_as_municipal_context) ... ok\ntest_missing_locality_is_rejected (test_pipeline.MunicipalValidationTests.test_missing_locality_is_rejected) ... ok\ntest_municipality_conflict_is_rejected (test_pipeline.MunicipalValidationTests.test_municipality_conflict_is_rejected) ... ok\ntest_non_finite_coordinate_is_rejected (test_pipeline.MunicipalValidationTests.test_non_finite_coordinate_is_rejected) ... ok\ntest_non_finite_indicator_is_rejected (test_pipeline.MunicipalValidationTests.test_non_finite_indicator_is_rejected) ... ok\ntest_non_municipal_field_is_rejected (test_pipeline.MunicipalValidationTests.test_non_municipal_field_is_rejected) ... ok\ntest_outside_locality_is_rejected (test_pipeline.MunicipalValidationTests.test_outside_locality_is_rejected) ... ok\ntest_climate_conflict_aborts (test_pipeline.PublishedDataTests.test_climate_conflict_aborts) ... ok\ntest_climate_station_granularity (test_pipeline.PublishedDataTests.test_climate_station_granularity) ... ok\ntest_csv_json_round_trip (test_pipeline.PublishedDataTests.test_csv_json_round_trip) ... ok\ntest_exact_duplicates_retained (test_pipeline.PublishedDataTests.test_exact_duplicates_retained) ... ok\ntest_full_schema_on_real_rows (test_pipeline.PublishedDataTests.test_full_schema_on_real_rows) ... ok\ntest_historical_damage_not_current_risk (test_pipeline.PublishedDataTests.test_historical_damage_not_current_risk) ... ok\ntest_incoming_and_raw_integrity (test_pipeline.PublishedDataTests.test_incoming_and_raw_integrity) ... ok\ntest_layers_coverage_matches_real_values (test_pipeline.PublishedDataTests.test_layers_coverage_matches_real_values) ... ok\ntest_manifest_hashes (test_pipeline.PublishedDataTests.test_manifest_hashes) ... ok\ntest_municipal_inputs_have_immutable_registered_copies (test_pipeline.PublishedDataTests.test_municipal_inputs_have_immutable_registered_copies) ... ok\ntest_municipal_publication_matches_raw_and_is_deterministic (test_pipeline.PublishedDataTests.test_municipal_publication_matches_raw_and_is_deterministic) ... ok\ntest_no_unvalidated_terrain_or_climate_in_localities (test_pipeline.PublishedDataTests.test_no_unvalidated_terrain_or_climate_in_localities) ... ok\ntest_nulls_preserved (test_pipeline.PublishedDataTests.test_nulls_preserved) ... ok\ntest_raw_conflict_is_never_overwritten (test_pipeline.PublishedDataTests.test_raw_conflict_is_never_overwritten) ... ok\ntest_scope_keys_and_counts (test_pipeline.PublishedDataTests.test_scope_keys_and_counts) ... ok\ntest_sources_catalog_is_declared_not_authenticated (test_pipeline.PublishedDataTests.test_sources_catalog_is_declared_not_authenticated) ... ok\ntest_workbook_dates_are_only_actual_metadata (test_pipeline.PublishedDataTests.test_workbook_dates_are_only_actual_metadata) ... ok\n\n----------------------------------------------------------------------\nRan 27 tests in 0.703s\n\nOK\nPASS: 30 original files unchanged; 7 outputs deterministic.\n"
+    },
+    {
+      "phase": "motor y API: pruebas de contratos y regresión",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/home/omarbolanos/Documentos/INNOVATEC 2026 TECNOLOGIAS EMERGENTES/ATLAS/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/engine",
+        "tests/api",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/tmp/atlas-tests-hb3vd1n6/tests.xml"
+      ],
+      "output_tail": "........................................................................ [ 70%]\n..............................                                           [100%]\n=============================== warnings summary ===============================\nbackend/.venv/lib64/python3.14/site-packages/fastapi/testclient.py:1\n  /home/omarbolanos/Documentos/INNOVATEC 2026 TECNOLOGIAS EMERGENTES/ATLAS/backend/.venv/lib64/python3.14/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n102 passed, 1 warning in 1.95s\n"
+    },
+    {
+      "phase": "API: recorrido por HTTP real con instancia aislada",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "scripts/demo/verify_api.py",
+        "--launch"
+      ],
+      "output_tail": "PASS catálogos reales y alcance \nPASS fichas y determinismo: housing \nPASS comparación A/B: housing \nPASS fichas y determinismo: building \nPASS comparación A/B: building \nPASS fichas y determinismo: road \nPASS comparación A/B: road \nPASS invariancia de datos y temporalidad por tipo de obra \nPASS antecedente positivo, sin registro y dato ausente \nPASS fuera de cobertura \nPASS clave inexistente \nPASS coordenada inválida \nPASS comparación de misma localidad \nPASS selección por clave autoritativa \nPASS /home/omarbolanos/Documentos/INNOVATEC 2026 TECNOLOGIAS EMERGENTES/ATLAS/docs/evidence/api_verification.json\n"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "canonical": "data/incoming/duplicates_review/irapuato_celaya_dataset_ml_geoespacial (2).xlsx",
+  "duplicate": "data/incoming/duplicates_review/irapuato_celaya_dataset_ml_geoespacial (1).xlsx",
+  "sha256": "463106c6232317da7c7934f9c28942d1d39af4dd20615303d1e13c5cce942567",
+  "bytes_equal": true,
+  "sha256_equal": true,
+  "sheet_content_equal": true,
+  "internal_metadata_equal": true,
+  "decision": "Use (2) only after exact comparison; both incoming files retained."
+}

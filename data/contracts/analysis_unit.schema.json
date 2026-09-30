@@ -1,0 +1,494 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ATLAS Data Contract V1 analysis unit",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "municipality_code",
+    "municipality",
+    "locality_code",
+    "locality",
+    "longitude",
+    "latitude",
+    "altitude_m",
+    "pobtot",
+    "pob15_64",
+    "pea",
+    "pocupada",
+    "vivtot",
+    "tvivhab",
+    "cob_electrica",
+    "cob_drenaje",
+    "autos_por_100_viv",
+    "dis_trans_2014",
+    "frecuencia_est_2014",
+    "tiempo_est_min_2014",
+    "drenaje_score_2014",
+    "alumbrado_score_2014",
+    "recub_score_2014",
+    "riesgo_inundacion_2014",
+    "riesgo_sequia_2014",
+    "riesgo_helada_2014",
+    "riesgo_incendio_2014",
+    "dist_carretera_m",
+    "dist_camino_m",
+    "dist_rio_arroyo_m",
+    "dist_cuerpo_agua_m",
+    "dist_canal_m",
+    "dist_linea_transmision_m",
+    "dist_subestacion_m",
+    "dist_via_ferrea_m",
+    "dist_industria_m",
+    "dist_infra_vial_m",
+    "dist_infra_hidrica_m",
+    "municipio_objetivo",
+    "vph_c_elec",
+    "vph_s_elec",
+    "vph_aguadv",
+    "vph_drenaj",
+    "vph_nodren",
+    "vph_autom",
+    "transprin_2014",
+    "frecuencia_2014",
+    "tiempo_2014",
+    "drenajecob_2014",
+    "alumbcob_2014",
+    "recubcob_2014",
+    "inundacion_2014",
+    "sequia_2014",
+    "helada_2014",
+    "incendio_2014",
+    "temblor_2014",
+    "ciclon_2014",
+    "riesgo_temblor_2014",
+    "riesgo_ciclon_2014",
+    "match_localidades_2014",
+    "analysis_unit",
+    "coordinate_crs",
+    "source_id",
+    "supplement_source_id"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Clave CVEGEO de localidad, 9 caracteres",
+      "pattern": "^11(007|017)[0-9]{4}$"
+    },
+    "municipality_code": {
+      "type": "string",
+      "description": "Clave municipal de 3 caracteres: 007/017",
+      "enum": [
+        "007",
+        "017"
+      ]
+    },
+    "municipality": {
+      "type": "string",
+      "description": "Nombre municipal",
+      "enum": [
+        "Celaya",
+        "Irapuato"
+      ]
+    },
+    "locality_code": {
+      "type": "string",
+      "description": "Clave de localidad de 4 caracteres"
+    },
+    "locality": {
+      "type": "string",
+      "description": "Nombre censal de localidad"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "Coordenada de localidad recibida en grados decimales; no reproyectada",
+      "minimum": -180,
+      "maximum": 180
+    },
+    "latitude": {
+      "type": "number",
+      "description": "Coordenada de localidad recibida en grados decimales; no reproyectada",
+      "minimum": -90,
+      "maximum": 90
+    },
+    "altitude_m": {
+      "type": "integer",
+      "description": "Altitud censal de la localidad respecto al nivel medio del mar (ITER 2020)"
+    },
+    "pobtot": {
+      "type": "integer",
+      "description": "Población total"
+    },
+    "pob15_64": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Población de 15 a 64 años"
+    },
+    "pea": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Población económicamente activa"
+    },
+    "pocupada": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Población ocupada"
+    },
+    "vivtot": {
+      "type": "integer",
+      "description": "Viviendas totales"
+    },
+    "tvivhab": {
+      "type": "integer",
+      "description": "Viviendas habitadas"
+    },
+    "cob_electrica": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Indicador derivado de disponibilidad de servicios o automóvil en viviendas"
+    },
+    "cob_drenaje": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Indicador derivado de disponibilidad de servicios o automóvil en viviendas"
+    },
+    "autos_por_100_viv": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Indicador derivado de disponibilidad de servicios o automóvil en viviendas"
+    },
+    "dis_trans_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Categoría original: DIS_TRANS_2014"
+    },
+    "frecuencia_est_2014": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Frecuencia ya aproximada a partir de intervalos categóricos"
+    },
+    "tiempo_est_min_2014": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Tiempo aproximado ya derivado de categoría de transporte"
+    },
+    "drenaje_score_2014": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Codificación ordinal preexistente de cobertura descrita en etiqueta original"
+    },
+    "alumbrado_score_2014": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Codificación ordinal preexistente de cobertura descrita en etiqueta original"
+    },
+    "recub_score_2014": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Codificación ordinal preexistente de cobertura descrita en etiqueta original"
+    },
+    "riesgo_inundacion_2014": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Antecedente de daño reportado en 2014: 1=Con daño, 0=Sin daño; null=no dato",
+      "enum": [
+        0,
+        1,
+        null
+      ]
+    },
+    "riesgo_sequia_2014": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Antecedente de daño reportado en 2014: 1=Con daño, 0=Sin daño; null=no dato",
+      "enum": [
+        0,
+        1,
+        null
+      ]
+    },
+    "riesgo_helada_2014": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Antecedente de daño reportado en 2014: 1=Con daño, 0=Sin daño; null=no dato",
+      "enum": [
+        0,
+        1,
+        null
+      ]
+    },
+    "riesgo_incendio_2014": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Antecedente de daño reportado en 2014: 1=Con daño, 0=Sin daño; null=no dato",
+      "enum": [
+        0,
+        1,
+        null
+      ]
+    },
+    "dist_carretera_m": {
+      "type": "number",
+      "description": "Distancia euclidiana precalculada a carretera",
+      "minimum": 0
+    },
+    "dist_camino_m": {
+      "type": "number",
+      "description": "Distancia euclidiana precalculada a camino",
+      "minimum": 0
+    },
+    "dist_rio_arroyo_m": {
+      "type": "number",
+      "description": "Distancia euclidiana precalculada a rio arroyo",
+      "minimum": 0
+    },
+    "dist_cuerpo_agua_m": {
+      "type": "number",
+      "description": "Distancia euclidiana precalculada a cuerpo agua",
+      "minimum": 0
+    },
+    "dist_canal_m": {
+      "type": "number",
+      "description": "Distancia euclidiana precalculada a canal",
+      "minimum": 0
+    },
+    "dist_linea_transmision_m": {
+      "type": "number",
+      "description": "Distancia euclidiana precalculada a linea transmision",
+      "minimum": 0
+    },
+    "dist_subestacion_m": {
+      "type": "number",
+      "description": "Distancia euclidiana precalculada a subestacion",
+      "minimum": 0
+    },
+    "dist_via_ferrea_m": {
+      "type": "number",
+      "description": "Distancia euclidiana precalculada a via ferrea",
+      "minimum": 0
+    },
+    "dist_industria_m": {
+      "type": "number",
+      "description": "Distancia euclidiana precalculada a industria",
+      "minimum": 0
+    },
+    "dist_infra_vial_m": {
+      "type": "number",
+      "description": "Distancia euclidiana precalculada a infra vial",
+      "minimum": 0
+    },
+    "dist_infra_hidrica_m": {
+      "type": "number",
+      "description": "Distancia euclidiana precalculada a infra hidrica",
+      "minimum": 0
+    },
+    "municipio_objetivo": {
+      "type": "integer",
+      "description": "Marcador original de pertenencia al subconjunto recibido; siempre 1"
+    },
+    "vph_c_elec": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Viviendas particulares habitadas con electricidad"
+    },
+    "vph_s_elec": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Viviendas particulares habitadas sin electricidad"
+    },
+    "vph_aguadv": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Viviendas particulares habitadas con agua entubada según variable ITER"
+    },
+    "vph_drenaj": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Viviendas particulares habitadas con drenaje"
+    },
+    "vph_nodren": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Viviendas particulares habitadas sin drenaje"
+    },
+    "vph_autom": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Viviendas particulares habitadas con automóvil"
+    },
+    "transprin_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Categoría original: TRANSPRIN_2014"
+    },
+    "frecuencia_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Categoría original: FRECUENCIA_2014"
+    },
+    "tiempo_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Categoría original: TIEMPO_2014"
+    },
+    "drenajecob_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Categoría original: DRENAJECOB_2014"
+    },
+    "alumbcob_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Categoría original: ALUMBCOB_2014"
+    },
+    "recubcob_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Categoría original: RECUBCOB_2014"
+    },
+    "inundacion_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Etiqueta de daño histórico original: Con daño / Sin daño"
+    },
+    "sequia_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Etiqueta de daño histórico original: Con daño / Sin daño"
+    },
+    "helada_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Etiqueta de daño histórico original: Con daño / Sin daño"
+    },
+    "incendio_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Etiqueta de daño histórico original: Con daño / Sin daño"
+    },
+    "temblor_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Etiqueta de daño histórico original: Con daño / Sin daño"
+    },
+    "ciclon_2014": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Etiqueta de daño histórico original: Con daño / Sin daño"
+    },
+    "riesgo_temblor_2014": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Antecedente de daño reportado en 2014: 1=Con daño, 0=Sin daño; null=no dato",
+      "enum": [
+        0,
+        1,
+        null
+      ]
+    },
+    "riesgo_ciclon_2014": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Antecedente de daño reportado en 2014: 1=Con daño, 0=Sin daño; null=no dato",
+      "enum": [
+        0,
+        1,
+        null
+      ]
+    },
+    "match_localidades_2014": {
+      "type": "integer",
+      "description": "Coincidencia de clave en la unión censal original, 1=sí/0=no"
+    },
+    "analysis_unit": {
+      "type": "string",
+      "description": "Unidad soportada: locality",
+      "const": "locality"
+    },
+    "coordinate_crs": {
+      "type": "string",
+      "description": "CRS declarado o CRS_UNKNOWN",
+      "const": "CRS_UNKNOWN"
+    },
+    "source_id": {
+      "type": "string",
+      "description": "Dataset fuente del maestro"
+    },
+    "supplement_source_id": {
+      "type": "string",
+      "description": "Dataset fuente de las variables complementarias"
+    }
+  }
+}

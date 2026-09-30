@@ -1,0 +1,77 @@
+[
+  {
+    "code": "dem",
+    "status": "PENDING",
+    "reason": "No raster; 755-point table has no source, resolution, date or algorithm."
+  },
+  {
+    "code": "dem_elevation",
+    "status": "PARTIAL",
+    "reason": "Values present for 755 points but unvalidated; not published as usable DEM elevation."
+  },
+  {
+    "code": "slope",
+    "status": "PENDING",
+    "reason": "Derived values present; source/resolution/algorithm missing; do not use operationally."
+  },
+  {
+    "code": "roughness",
+    "status": "PENDING",
+    "reason": "No roughness column or raster."
+  },
+  {
+    "code": "geology_faults",
+    "status": "PENDING",
+    "reason": "No fault/fracture geometry received."
+  },
+  {
+    "code": "landslides",
+    "status": "PENDING",
+    "reason": "No susceptibility geometry received."
+  },
+  {
+    "code": "anp",
+    "status": "PENDING",
+    "reason": "No protected-area geometry received."
+  },
+  {
+    "code": "modern_flood_surface",
+    "status": "PENDING",
+    "reason": "Historical 2014 damage is not a modern flood surface."
+  },
+  {
+    "code": "precipitation",
+    "status": "PARTIAL",
+    "reason": "CONTEXT_ONLY: 2 stations/25 months; institution/CRS unverified."
+  },
+  {
+    "code": "precipitation_spatial",
+    "status": "PENDING",
+    "reason": "No validated homogeneous spatial precipitation layer."
+  },
+  {
+    "code": "temperature",
+    "status": "PENDING",
+    "reason": "No temperature column in received climate workbooks."
+  },
+  {
+    "code": "soils",
+    "status": "PENDING",
+    "reason": "No complete soil dataset received."
+  },
+  {
+    "code": "potential_land_use",
+    "status": "PENDING",
+    "reason": "No potential-land-use dataset received."
+  },
+  {
+    "code": "landuse_current",
+    "status": "PENDING",
+    "reason": "Series I/IV attributes do not establish current point coverage without geometries."
+  },
+  {
+    "code": "subbasin_assignment",
+    "status": "PENDING",
+    "reason": "GEOMETRY_LIMITATION: representative point/BBOX is not a polygon."
+  }
+]

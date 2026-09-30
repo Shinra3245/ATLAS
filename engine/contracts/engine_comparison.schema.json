@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.local/contracts/engine_comparison.schema.json",
+  "title": "ATLAS Engine Comparison v1",
+  "description": "Esquema de la salida de compare_locations (Bloque 2). Prohibidas por diseño las claves de ganador o puntuación global.",
+  "type": "object",
+  "$defs": {
+    "resolvedLocation": {
+      "type": "object",
+      "properties": {
+        "lat": { "type": "number" },
+        "lon": { "type": "number" },
+        "municipality": { "type": ["string", "null"] },
+        "area_status": { "type": "string", "enum": ["supported", "outside_supported_area"] },
+        "analysis_unit": { "type": "string", "enum": ["locality", "continuous_layer", "undetermined"] },
+        "locality_id": { "type": ["string", "null"] },
+        "label": { "type": ["string", "null"] },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["lat", "lon", "municipality", "area_status", "analysis_unit", "notes"],
+      "additionalProperties": false
+    },
+    "coverageSummary": {
+      "type": "object",
+      "properties": {
+        "expected": { "type": "integer" },
+        "data_available": { "type": "integer" },
+        "partial_data": { "type": "integer" },
+        "insufficient_data": { "type": "integer" },
+        "no_registered_condition": { "type": "integer" },
+        "blocked_data_validation": { "type": "integer" },
+        "by_category": { "type": "object" }
+      },
+      "required": [
+        "expected",
+        "data_available",
+        "partial_data",
+        "insufficient_data",
+        "no_registered_condition",
+        "blocked_data_validation",
+        "by_category"
+      ],
+      "additionalProperties": false
+    },
+    "factorComparison": {
+      "type": "object",
+      "properties": {
+        "factor": { "type": "string" },
+        "label": { "type": "string" },
+        "category": { "type": "string", "enum": ["hazard", "hazard_history", "territorial_factor", "context", "derived"] },
+        "unit": { "type": ["string", "null"] },
+        "value_a": {},
+        "value_b": {},
+        "status_a": { "type": "string" },
+        "status_b": { "type": "string" },
+        "coverage_a": { "type": "string" },
+        "coverage_b": { "type": "string" },
+        "source_a": { "type": ["string", "null"] },
+        "source_b": { "type": ["string", "null"] },
+        "observable_difference": { "type": "string" },
+        "difference_detected": { "type": "boolean" },
+        "more_data_available_at": { "type": ["string", "null"], "enum": ["A", "B", null] },
+        "condition_only_in": { "type": ["string", "null"], "enum": ["A", "B", null] },
+        "limitations": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": [
+        "factor",
+        "label",
+        "category",
+        "unit",
+        "value_a",
+        "value_b",
+        "status_a",
+        "status_b",
+        "coverage_a",
+        "coverage_b",
+        "source_a",
+        "source_b",
+        "observable_difference",
+        "difference_detected",
+        "more_data_available_at",
+        "condition_only_in",
+        "limitations"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "comparison_id": { "type": "string" },
+    "schema_version": { "type": "string", "const": "engine_result/v1" },
+    "engine_version": { "type": "string" },
+    "project_type": { "type": "string", "enum": ["housing", "building", "road"] },
+    "location_a": { "$ref": "#/$defs/resolvedLocation" },
+    "location_b": { "$ref": "#/$defs/resolvedLocation" },
+    "factors": { "type": "array", "items": { "$ref": "#/$defs/factorComparison" } },
+    "coverage_a": { "$ref": "#/$defs/coverageSummary" },
+    "coverage_b": { "$ref": "#/$defs/coverageSummary" },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "same_locality": { "type": "boolean" },
+    "disclaimer": { "type": "string" }
+  },
+  "required": [
+    "comparison_id",
+    "schema_version",
+    "engine_version",
+    "project_type",
+    "location_a",
+    "location_b",
+    "factors",
+    "coverage_a",
+    "coverage_b",
+    "limitations",
+    "notes",
+    "same_locality",
+    "disclaimer"
+  ],
+  "not": {
+    "anyOf": [
+      { "required": ["winner"] },
+      { "required": ["best_location"] },
+      { "required": ["safety_score"] },
+      { "required": ["global_risk_score"] },
+      { "required": ["feasibility_score"] }
+    ]
+  },
+  "additionalProperties": false
+}

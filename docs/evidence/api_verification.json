@@ -1,0 +1,67 @@
+{
+  "checked_at": "2026-09-30T03:27:57.084475+00:00",
+  "status": "PASS",
+  "transport": "real_http",
+  "base_url": "http://127.0.0.1:45697",
+  "scope": "API y motor con datos publicados; no certifica frontend ni dictamen territorial",
+  "locations": 755,
+  "sources": 14,
+  "checks": [
+    {
+      "check": "catálogos reales y alcance",
+      "status": "PASS"
+    },
+    {
+      "check": "fichas y determinismo: housing",
+      "status": "PASS"
+    },
+    {
+      "check": "comparación A/B: housing",
+      "status": "PASS"
+    },
+    {
+      "check": "fichas y determinismo: building",
+      "status": "PASS"
+    },
+    {
+      "check": "comparación A/B: building",
+      "status": "PASS"
+    },
+    {
+      "check": "fichas y determinismo: road",
+      "status": "PASS"
+    },
+    {
+      "check": "comparación A/B: road",
+      "status": "PASS"
+    },
+    {
+      "check": "invariancia de datos y temporalidad por tipo de obra",
+      "status": "PASS"
+    },
+    {
+      "check": "antecedente positivo, sin registro y dato ausente",
+      "status": "PASS"
+    },
+    {
+      "check": "fuera de cobertura",
+      "status": "PASS"
+    },
+    {
+      "check": "clave inexistente",
+      "status": "PASS"
+    },
+    {
+      "check": "coordenada inválida",
+      "status": "PASS"
+    },
+    {
+      "check": "comparación de misma localidad",
+      "status": "PASS"
+    },
+    {
+      "check": "selección por clave autoritativa",
+      "status": "PASS"
+    }
+  ]
+}

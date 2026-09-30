@@ -1,0 +1,143 @@
+{
+  "fixture_version": "test-fixture-v1",
+  "_warning": "TEST_FIXTURE — datos SIMULADOS de prueba. NO son datos reales ni provienen del DATA CONTRACT. No usar en producción.",
+  "localities": [
+    {
+      "locality_id": "TEST_IRAPUATO_001",
+      "municipality": "Irapuato",
+      "lat": 20.674,
+      "lon": -101.349,
+      "match_radius_deg": 0.03,
+      "factors": {
+        "flood_history": {
+          "value": true,
+          "unit": null,
+          "coverage_state": "available",
+          "temporal_context": "historical",
+          "source": {
+            "id": "fixture:flood_2014",
+            "name": "Antecedente de inundación censal 2014 (localidad)",
+            "date_or_version": "2014"
+          }
+        },
+        "faults": {
+          "value": "no_registrada",
+          "coverage_state": "available",
+          "temporal_context": "current",
+          "no_registered_condition": true,
+          "source": {
+            "id": "fixture:faults",
+            "name": "Capa geológica (candidata)",
+            "date_or_version": "sim"
+          }
+        },
+        "landslide_susceptibility": {
+          "value": "baja",
+          "coverage_state": "available",
+          "temporal_context": "current",
+          "source": {
+            "id": "fixture:landslide",
+            "name": "Susceptibilidad de laderas (candidata)",
+            "date_or_version": "sim"
+          }
+        },
+        "slope": {
+          "value": 14,
+          "unit": "%",
+          "coverage_state": "available",
+          "temporal_context": "current",
+          "source": {
+            "id": "fixture:dem",
+            "name": "DEM candidato terreno",
+            "date_or_version": "2024"
+          }
+        },
+        "land_use": {
+          "value": "agricola",
+          "coverage_state": "available",
+          "temporal_context": "current",
+          "source": {
+            "id": "fixture:landuse",
+            "name": "Uso de suelo (candidato)",
+            "date_or_version": "sim"
+          }
+        },
+        "elevation": {
+          "value": 1725,
+          "unit": "m",
+          "coverage_state": "available",
+          "temporal_context": "current",
+          "source": {
+            "id": "fixture:dem",
+            "name": "DEM candidato terreno",
+            "date_or_version": "2024"
+          }
+        },
+        "population": {
+          "value": 1200,
+          "coverage_state": "available",
+          "temporal_context": "current",
+          "source": {
+            "id": "fixture:census",
+            "name": "Población localidad (censo)",
+            "date_or_version": "2020"
+          }
+        },
+        "hydrography_proximity": {
+          "value": 320,
+          "unit": "m",
+          "coverage_state": "available",
+          "temporal_context": "current",
+          "source": {
+            "id": "fixture:hydro",
+            "name": "Proximidad hidrográfica (candidata)",
+            "date_or_version": "sim"
+          }
+        }
+      }
+    },
+    {
+      "locality_id": "TEST_CELAYA_001",
+      "municipality": "Celaya",
+      "lat": 20.523,
+      "lon": -100.815,
+      "match_radius_deg": 0.03,
+      "factors": {
+        "flood_history": {
+          "value": false,
+          "unit": null,
+          "coverage_state": "available",
+          "temporal_context": "historical",
+          "no_registered_condition": true,
+          "source": {
+            "id": "fixture:flood_2014",
+            "name": "Antecedente de inundación censal 2014 (localidad)",
+            "date_or_version": "2014"
+          }
+        },
+        "slope": {
+          "value": 9,
+          "unit": "%",
+          "coverage_state": "partial",
+          "temporal_context": "current",
+          "coverage_detail": "Cobertura parcial del DEM candidato en la unidad.",
+          "source": {
+            "id": "fixture:dem",
+            "name": "DEM candidato terreno",
+            "date_or_version": "2024"
+          }
+        },
+        "population": {
+          "value": 850,
+          "coverage_state": "available",
+          "temporal_context": "current",
+          "source": {
+            "id": "fixture:census",
+            "name": "Población localidad (censo)",
+            "date_or_version": "2020"
+          }
+        }
+      }
+    }
+  ]
+}

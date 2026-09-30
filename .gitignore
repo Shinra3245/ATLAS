@@ -1,0 +1,89 @@
+# Variables y secretos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Node / Vite
+node_modules/
+.npm/
+.vite/
+frontend/dist/
+coverage/
+*.tsbuildinfo
+
+# Datos locales y artefactos pesados
+/data/incoming/*
+!/data/incoming/.gitkeep
+/data/raw/*
+!/data/raw/.gitkeep
+/data/processed/*
+!/data/processed/.gitkeep
+/data/intermediate/*
+!/data/intermediate/.gitkeep
+/data/metadata/inventory.json
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.gpkg
+*.geojson
+*.parquet
+*.tif
+*.tiff
+*.hdf5
+
+# Modelos y experimentos generados
+/ml/models/*
+!/ml/models/.gitkeep
+*.pkl
+*.pickle
+*.joblib
+*.onnx
+*.pt
+*.pth
+*.h5
+*.xgb
+mlruns/
+wandb/
+
+# Cuadernos
+.ipynb_checkpoints/
+
+# IDE y sistema
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Registros y temporales
+/backend/logs/
+*.log
+*.tmp
+*.temp
+.cache/
+
+# Catálogo local de habilidades, no parte del producto
+/.skills-shared/
