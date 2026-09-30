@@ -142,14 +142,97 @@
     "ml": {
       "type": "object",
       "properties": {
-        "enabled": { "type": "boolean", "const": false },
+        "enabled": { "type": "boolean" },
         "status": {
           "type": "string",
           "enum": ["DISABLED_PENDING_TARGET_VALIDATION", "HISTORICAL_EXPERIMENT", "ENABLED"]
         },
-        "reason": { "type": "string" }
+        "reason": { "type": "string" },
+        "experiment": {
+          "type": ["object", "null"],
+          "properties": {
+            "name": { "type": "string" },
+            "target": { "type": "string" },
+            "target_meaning": { "type": "string" },
+            "year": { "type": "integer" },
+            "model": { "type": "string" },
+            "version": { "type": "string" },
+            "features": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" },
+                  "label": { "type": "string" }
+                },
+                "required": ["id", "label"],
+                "additionalProperties": false
+              }
+            },
+            "validation": {
+              "type": "object",
+              "properties": {
+                "strategy": { "type": "string" },
+                "baseline": { "type": "string" },
+                "useful_for_a_decision": { "type": "boolean" },
+                "holdouts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "held_out": { "type": "string" },
+                      "precision": { "type": "number" },
+                      "recall": { "type": "number" },
+                      "f1": { "type": "number" },
+                      "true_positives": { "type": "integer" },
+                      "false_positives": { "type": "integer" }
+                    },
+                    "required": [
+                      "held_out",
+                      "precision",
+                      "recall",
+                      "f1",
+                      "true_positives",
+                      "false_positives"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": ["strategy", "baseline", "useful_for_a_decision", "holdouts"],
+              "additionalProperties": false
+            },
+            "locality": {
+              "type": "object",
+              "properties": {
+                "recorded": {
+                  "type": "string",
+                  "enum": ["con_dano", "sin_dano", "sin_dato"]
+                },
+                "recorded_label": { "type": "string" },
+                "reading": { "type": "string" }
+              },
+              "required": ["recorded", "recorded_label", "reading"],
+              "additionalProperties": false
+            },
+            "limitations": { "type": "array", "items": { "type": "string" } }
+          },
+          "required": [
+            "name",
+            "target",
+            "target_meaning",
+            "year",
+            "model",
+            "version",
+            "features",
+            "validation",
+            "locality",
+            "limitations"
+          ],
+          "additionalProperties": false
+        }
       },
-      "required": ["enabled", "status", "reason"],
+      "required": ["enabled", "status", "reason", "experiment"],
       "additionalProperties": false
     }
   },

@@ -1,6 +1,6 @@
 # Gate de validación de Machine Learning (Bloque 2)
 
-Estado actual: **`DISABLED_PENDING_TARGET_VALIDATION`**.
+Estado actual: **`HISTORICAL_EXPERIMENT`**. El experimento es visible en el análisis. No publica susceptibilidad: la utilidad sobre el baseline no está demostrada y la procedencia de la etiqueta sigue parcial.
 
 ML es complementario y explicable. ATLAS funciona sin ML y el módulo puede
 desactivarse sin romper la aplicación. Este documento define las condiciones que

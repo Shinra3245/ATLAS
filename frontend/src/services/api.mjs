@@ -1,3 +1,5 @@
+import { getAccountToken } from "./firebase.mjs";
+
 export class APIError extends Error {
   constructor(message, code, status) {
     super(message);
@@ -6,14 +8,19 @@ export class APIError extends Error {
     this.status = status;
   }
 }
-export async function request(path, { body, signal } = {}) {
-  const timeout = AbortSignal.timeout(35000);
+export async function request(path, { body, signal, timeoutMs = 35000 } = {}) {
+  const timeout = AbortSignal.timeout(timeoutMs);
   const combinedSignal = signal ? AbortSignal.any([signal, timeout]) : timeout;
   let response;
   try {
+    const headers = body ? { "Content-Type": "application/json" } : {};
+    if (body) {
+      const token = await getAccountToken();
+      if (token) headers.Authorization = `Bearer ${token}`;
+    }
     response = await fetch(`/api${path}`, {
       method: body ? "POST" : "GET",
-      headers: body ? { "Content-Type": "application/json" } : undefined,
+      headers,
       body: body ? JSON.stringify(body) : undefined,
       signal: combinedSignal,
     });
@@ -56,5 +63,11 @@ export const api = {
     request("/compare", {
       body: { location_a, location_b, project_type },
       signal,
+    }),
+  assistant: (messages, context, signal) =>
+    request("/assistant", {
+      body: { messages, context },
+      signal,
+      timeoutMs: 50000,
     }),
 };

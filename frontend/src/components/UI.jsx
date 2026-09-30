@@ -24,6 +24,7 @@ import {
   X,
 } from "lucide-react";
 import { STATUS, DISCLAIMER } from "../utils/presentation.mjs";
+import { GeoPulse, GeoPulseIcon } from "./GeoPulse";
 
 export function Logo({ light = false }) {
   return (
@@ -54,11 +55,13 @@ export function Button({
   icon: Icon,
   variant = "primary",
   className = "",
+  loading = false,
+  disabled = false,
   ...props
 }) {
   return (
-    <button className={`button button-${variant} ${className}`} {...props}>
-      {Icon && <Icon size={18} aria-hidden="true" />}
+    <button className={`button button-${variant} ${className}`} disabled={disabled || loading} aria-busy={loading || undefined} {...props}>
+      {loading ? <GeoPulseIcon compact /> : Icon && <Icon size={18} aria-hidden="true" />}
       {children}
     </button>
   );
@@ -103,13 +106,8 @@ export function ErrorNotice({ error, retry }) {
     </div>
   );
 }
-export function Loading({ text = "Consultando información real…" }) {
-  return (
-    <div className="loading" role="status">
-      <span className="spinner" />
-      {text}
-    </div>
-  );
+export function Loading({ text = "Consultando información territorial…", detail }) {
+  return <GeoPulse title={text} detail={detail} delay={300} />;
 }
 export function FactorIcon({ code, size = 22, ...props }) {
   const Icon =

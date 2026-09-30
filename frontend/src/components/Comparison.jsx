@@ -1,13 +1,14 @@
 import React from "react";
 import { ArrowLeft, FileText, RefreshCw, Scale } from "lucide-react";
 import { Badge, Button, Notice } from "./UI";
-import { CoverageSummary, LocationSummary } from "./Analysis";
+import { CoverageSummary, LocationSummary, MachineLearningPanel } from "./Analysis";
 import {
   CORE,
   allFactors,
   factorName,
   formatValue,
   isMunicipal,
+  plainDifference,
   summarize,
 } from "../utils/presentation.mjs";
 
@@ -15,6 +16,7 @@ export function Comparison({
   comparison,
   resultA,
   resultB,
+  revealed,
   onBack,
   onChangeB,
   onReport,
@@ -78,7 +80,7 @@ export function Comparison({
                   </td>
                 ))}
                 <td>
-                  <p>{f.observable_difference}</p>
+                  <p>{plainDifference(f)}</p>
                   {f.limitations.length > 0 && (
                     <details>
                       <summary>Limitaciones</summary>
@@ -139,6 +141,12 @@ export function Comparison({
           compact
         />
       </div>
+      {revealed && (
+        <div className="ml-pair">
+          <MachineLearningPanel ml={resultA?.ml} compact />
+          <MachineLearningPanel ml={resultB?.ml} compact />
+        </div>
+      )}
       <details className="more-details">
         <summary>
           Contexto territorial y municipal ({other.length} indicadores)

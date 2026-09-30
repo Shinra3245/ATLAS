@@ -52,7 +52,7 @@ El doble de motor está solo en `tests/api/engine_double.py` y marca sus fuentes
 - Fallas, laderas y uso de suelo permanecen sin capa validada; pendiente bloqueada hasta validar DEM/método. El antecedente de inundación 2014 no es riesgo actual.
 - Una clave `locality_id` publicada tiene prioridad sobre coordenadas auxiliares, como establece el motor. La salida usa la coordenada canónica de esa localidad. Una clave inexistente responde 404 y dos entradas resueltas a la misma localidad responden 422.
 - `/api/sources`, `/api/layers` y `/api/locations` reenvían catálogos del motor. El backend no lee directamente XLSX ni archivos de `data/`.
-- ML: `DISABLED_PENDING_TARGET_VALIDATION`, leído de `disabled_ml_info()`.
+- ML: `HISTORICAL_EXPERIMENT`, leído de `ml_status()`. No publica una susceptibilidad.
 
 ## Verificación HTTP reproducible
 

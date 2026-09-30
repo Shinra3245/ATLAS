@@ -59,6 +59,29 @@ export function guideMoment({
         "Cada estado describe disponibilidad. La falta de datos no es ausencia de riesgo.",
     };
   }
+  if (route === "/acceso") {
+    return {
+      expression: "happy",
+      prompt: "¿Quieres conocer cómo entrar?",
+      message:
+        "Entra con tu correo o crea una cuenta. Al registrarte eliges un plan.",
+    };
+  }
+  if (route === "/registro") {
+    return {
+      expression: "happy",
+      prompt: "¿Quieres ayuda para crear tu cuenta?",
+      message: "Completa tus datos, acepta el alcance preliminar y crea tu cuenta. Después podrás elegir un plan.",
+    };
+  }
+  if (route === "/planes") {
+    return {
+      expression: "happy",
+      prompt: "¿Quieres conocer cómo se elige un plan?",
+      message:
+        "Básico, Profesional o MAX. Esta demostración no cobra; puedes probar los planes.",
+    };
+  }
   if (route.startsWith("/ficha/")) {
     return {
       expression: "idle",

@@ -51,7 +51,7 @@ Valores del motor, sin renombrar:
 | `HISTORICAL_EXPERIMENT` | experimental |
 | `ENABLED` | disponible, solo tras validación formal |
 
-Valor actual, tomado de `disabled_ml_info()` del motor: `DISABLED_PENDING_TARGET_VALIDATION`, `enabled: false`.
+Valor actual, tomado del motor: `HISTORICAL_EXPERIMENT`, `enabled: true`. El análisis incluye `ml.experiment` con la etiqueta histórica de la localidad y la validación. `useful_for_a_decision` es `false`: no hay probabilidad ni susceptibilidad publicada. Fuera del área soportada, `enabled` vuelve a `false` y `experiment` es `null`.
 
 ## Envelope de error
 
@@ -105,7 +105,7 @@ Respuesta `200`:
   },
   "supported_municipalities": ["Irapuato", "Celaya"],
   "project_types": ["housing", "building", "road"],
-  "ml_status": "DISABLED_PENDING_TARGET_VALIDATION"
+  "ml_status": "HISTORICAL_EXPERIMENT"
 }
 ```
 
@@ -307,9 +307,9 @@ Campos de una fuente, cuando exista: `id`, `name`, `institution`, `dataset`, `da
 
 ```json
 {
-  "enabled": false,
-  "status": "DISABLED_PENDING_TARGET_VALIDATION",
-  "reason": "Sin variable objetivo validada. El módulo ML permanece deshabilitado; el análisis SIG/reglas funciona de forma independiente. RIESGO_INUNDACION_2014 solo podría usarse como experimento histórico, nunca como riesgo actual."
+  "enabled": true,
+  "status": "HISTORICAL_EXPERIMENT",
+  "reason": "Experimento histórico sobre daño por inundación reportado en 2014. Está visible en el análisis. No es riesgo actual y no asigna una probabilidad."
 }
 ```
 
@@ -325,6 +325,6 @@ Campos de una fuente, cuando exista: `id`, `name`, `institution`, `dataset`, `da
 - Catálogos publicados por el motor: 14 fuentes, 53 atributos por localidad y 755 localidades (`/api/sources`, `/api/layers`, `/api/locations`). La API no lee `data/incoming`, `data/raw` ni `data/processed`; solo reenvía lo que publica el motor.
 - El markdown `ENGINE_CONTRACT_V1.md` y `engine_comparison.schema.json` ya están publicados. La integración usa esos contratos y la API Python pública del paquete `engine`.
 - La compuerta geográfica usa la resolución del motor con un límite efectivo de asociación (0.05°) sobre las localidades reales, no polígonos oficiales ni cajas fijas.
-- ML permanece apagado.
+- ML publica el experimento histórico de inundación 2014 y no asigna una susceptibilidad.
 - No hay autenticación, usuarios, pagos ni exposición pública a Internet.
 - Python del entorno: 3.14.7, en `backend/.venv`. No se modificó el Python del sistema. FastAPI 0.142.1, Uvicorn 0.54.0 y Pydantic 2.13.5 instalaron con wheels compatibles.

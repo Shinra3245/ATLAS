@@ -19,7 +19,7 @@ El preview usa una instancia aislada del backend vigente en loopback:8001. La AP
 | --- | --- |
 | Construcción `npm run build` | Correcta |
 | Unidad `npm test` | 14/14 |
-| Navegador `npm run test:e2e` | 16/16 |
+| Navegador `npm run test:e2e` | 26/26; integración de Geo Pulse verificada el 30 de septiembre de 2026 |
 | Dependencias `npm audit --audit-level=moderate` | 0 vulnerabilidades reportadas en esta revisión |
 | Navegación, análisis y comparación | Sin excepciones de página en el flujo comprobado |
 | Consulta real | Irapuato 110170001 y Celaya 110070001 |
@@ -31,13 +31,21 @@ El preview usa una instancia aislada del backend vigente en loopback:8001. La AP
 | Responsive | 320, 390, 768, 1024 y 1920 px; sin desbordamiento horizontal de página en las vistas comprobadas |
 | Evidencia | Apertura, contenido real y cierre con Escape |
 | Procedencia visible | Sin nombres de XLSX ni códigos internos en evidencia y ficha; fuente original no verificada se distingue de una atribución declarada |
-| Marca proporcionada en el mockup | Logo y nombre originales cargan en landing, sistema, información, ficha y laboratorio visual; favicon actualizado |
+| Marca proporcionada en el mockup | Logo y nombre originales cargan en landing, sistema, información y ficha; Geo Pulse reutiliza el icono original; favicon actualizado |
 | Tipos de obra en navegador | Vivienda, edificación y vialidad: análisis, ficha y comparación A/B |
 | API actual del preview | 14/14 comprobaciones HTTP; la instancia compartida antigua en :8000 falla 2 |
 | Teclado | Saltar al contenido conserva la ruta y enfoca el área principal |
 | Preview | Rechaza archivos privados, métodos ajenos y Origin externo |
 
 Pruebas en Google Chrome del nodo, no en todos los motores de navegador. Las pruebas consumen consultas reales de la API; la respuesta de error y el bloqueo de teselas se simulan exclusivamente dentro del entorno de prueba.
+
+## Integración de ATLAS Geo Pulse — 30 de septiembre de 2026
+
+Construcción correcta, 14 pruebas unitarias y 26 de navegador aprobadas mediante `ATLAS_TEST_URL=http://127.0.0.1:5174 npm run test:e2e`. Las diez pruebas nuevas de `frontend/tests/e2e/loading.spec.js` comprueban los catálogos, las consultas rápidas y lentas, cancelación con botón y Escape, finalización de análisis/comparación en ambos órdenes, errores, carga y espera agotada del mapa. También comprueban el foco al cerrar el modal, pantallas de 320/390 px y movimiento reducido.
+
+Las respuestas reales de análisis y comparación se retienen en el navegador de prueba para observar la espera. Las teselas de éxito y fallo se controlan dentro de esas pruebas; no se incorporan mapas ni resultados ficticios al sistema. Los pasos solo cambian al recibir y validar respuestas, nunca por un intervalo de tiempo. El modal se abre después de 1.2 segundos y permite cancelar. Las fichas y resúmenes ya disponibles se muestran sin añadir una espera. La galería y sus dos variantes descartadas se retiraron.
+
+Capturas regeneradas en `frontend/test-results/`: `geo-pulse-button.png`, `geo-pulse-analysis-modal.png`, `geo-pulse-mobile-modal.png`, `geo-pulse-comparison-analysis.png`, `geo-pulse-comparison-comparison.png` y `geo-pulse-map.png`. Son comprobaciones de interfaz bajo condiciones controladas, no evidencias de nuevas fuentes territoriales.
 
 Capturas reproducibles en `frontend/test-results/`: landing y selección de escritorio, análisis, evidencia, comparación, móvil y ficha. PDF de comprobación: `ficha-browser.pdf`. Son salidas de pruebas locales, no nuevos datasets ni documentos oficiales.
 

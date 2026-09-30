@@ -42,3 +42,49 @@ Durante esta revisión apareció otra edición simultánea: `frontend/src/pages/
 3. Equipo: realizar sesiones reales con usuarios definidos, revisar comprensión de ficha, fuentes y límites, ensayar la demo en menos de siete minutos y conservar una copia estable.
 
 Hasta completar estas dependencias no corresponde declarar «10/10 terminado» ni presentar la evaluación como riesgo actual o dictamen de obra.
+
+## Re-verificación 2026-09-30 (sesión técnica)
+
+Se re-confirmó el estado real por código, datos y pruebas. **Los estados de los
+diez puntos NO cambian**: los puntos 1, 3, 4 y 7 siguen PARCIAL; 2 DEFINIDO con
+validación pendiente; 5, 6, 8 y 10 implementados técnicamente con validación
+externa pendiente; 9 conforme al gate con ML apagado. Lo que cambió es la
+evidencia y el endurecimiento de garantías, no el cierre.
+
+Evidencia ejecutada (2026-09-30T06:02Z):
+
+- Motor (Bloque 2): **72/72** `pytest` con `engine/.venv` (incluye 6 pruebas
+  nuevas de garantía en `tests/engine/test_missing_layers_guarantee.py`).
+- API (Bloque 3): **37/37** `pytest` con `backend/.venv` (incluye 1 prueba nueva
+  de garantía en el borde HTTP con el motor real).
+- Integridad de datos publicados: las **7 salidas** de `data/processed/v1/`
+  coinciden con los `sha256` de `manifest.json` (verificación no destructiva; no
+  se reconstruyó ni alteró `incoming`, `raw` ni `processed`).
+- Suite de datos (`tests/data`): **no ejecutada aquí** por falta de `openpyxl` en
+  este entorno; pertenece al entorno del Bloque 1. Bloqueo de entorno, no de código.
+
+Garantía obligatoria endurecida ("una capa faltante nunca se representa como
+riesgo bajo ni como dato disponible"): pruebas automatizadas verifican que
+`slope` (BLOCKED), `faults`, `landslide_susceptibility` y `land_use`
+(INSUFFICIENT) nunca aparecen como `DATA_AVAILABLE`/`PARTIAL_DATA`; que ningún
+factor usa etiquetas de "riesgo bajo/seguro"; que el antecedente de inundación
+2014 permanece histórico; y que los indicadores `*_mun_context` son contexto,
+nunca la amenaza del predio.
+
+Preparación de validación con personas (Prioridad D): se creó
+[`../validation/VALIDATION_PROTOCOLS.md`](../validation/VALIDATION_PROTOCOLS.md)
+con protocolo, tareas, criterios y formato de registro para usuarios, revisión
+profesional y ensayo de demo. Todo queda **PENDIENTE DE VALIDACIÓN EXTERNA**; no
+se inventaron sesiones, opiniones ni tiempos.
+
+Procedencia (Prioridad A): sin cambio. Todas las fuentes siguen
+`SOURCE_PROVENANCE_PARTIAL` con institución declarada (no verificada), URL/licencia
+`UNKNOWN`/`PENDING`. No se acreditó ninguna fuente nueva ni se atribuyó a
+INEGI/CONAGUA/CENAPRED/CONABIO/CFE un valor sin cotejo. Capas espaciales del
+núcleo (DEM/pendiente, fallas, inundación moderna, laderas, uso de suelo con
+geometría): siguen pendientes.
+
+Coordinación/servidores: no se detuvo ni reinició ningún proceso. La instancia
+antigua en `:8000` sigue en pie sin tocarse; el preview aislado en `:8001`/`:5174`
+y el Vite en `:5173` (edición simultánea de frontend) se preservaron. No se
+modificó `frontend/` ni `data/`. Sin `commit`/`push`.

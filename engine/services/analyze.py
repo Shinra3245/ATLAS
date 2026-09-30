@@ -33,7 +33,7 @@ from .data_source import (
     LocalityResolution,
     default_data_source,
 )
-from .ml_info import disabled_ml_info
+from .ml_info import disabled_ml_info, historical_experiment_info
 
 #: Versión del motor. Forma parte del contrato y de la trazabilidad.
 ENGINE_VERSION = "engine/1.0.0-mvp"
@@ -118,7 +118,7 @@ def _base_limitations(
     data_source: DataSource, conditions: list[Condition]
 ) -> list[str]:
     limitations = [
-        "Cobertura del MVP limitada a Irapuato y Celaya.",
+        "Cobertura limitada a Irapuato y Celaya.",
         "La ausencia de información no equivale a ausencia de riesgo.",
         "Unidad de análisis: localidad censal; no se aplica a un predio o "
         "coordenada arbitraria.",
@@ -196,9 +196,9 @@ def analyze_location(
             coverage=empty_coverage,
             sources=[],
             limitations=[
-                "Ubicación fuera del área soportada por el MVP (Irapuato/Celaya).",
+                "Ubicación fuera del área de cobertura (Irapuato/Celaya).",
                 "OUTSIDE_SUPPORTED_AREA no significa ausencia de riesgo; significa "
-                "que ATLAS no cubre esa zona en el MVP.",
+                "que ATLAS no cubre esa zona.",
             ],
             review_items=[
                 "Seleccionar una localidad dentro de Irapuato o Celaya para analizar."
@@ -238,5 +238,5 @@ def analyze_location(
         sources=sources,
         limitations=limitations,
         review_items=review_items,
-        ml=disabled_ml_info(),
+        ml=historical_experiment_info(resolution.record),
     )

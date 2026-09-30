@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from pathlib import Path
 
 _CONFIGURED = False
@@ -15,10 +16,6 @@ def configure_logging() -> None:
     if _CONFIGURED:
         return
 
-    log_dir = Path(__file__).resolve().parents[2] / "logs"
-    log_dir.mkdir(parents=True, exist_ok=True)
-    log_path = log_dir / "api.log"
-
     formatter = logging.Formatter(
         "%(asctime)s %(levelname)s %(name)s %(message)s"
     )
@@ -27,12 +24,14 @@ def configure_logging() -> None:
 
     stream = logging.StreamHandler()
     stream.setFormatter(formatter)
-    file_handler = logging.FileHandler(log_path, encoding="utf-8")
-    file_handler.setFormatter(formatter)
-
     root.handlers.clear()
     root.addHandler(stream)
-    root.addHandler(file_handler)
+    if os.environ.get("ATLAS_ENV") != "production":
+        log_dir = Path(__file__).resolve().parents[2] / "logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        file_handler = logging.FileHandler(log_dir / "api.log", encoding="utf-8")
+        file_handler.setFormatter(formatter)
+        root.addHandler(file_handler)
     root.propagate = False
     _CONFIGURED = True
 

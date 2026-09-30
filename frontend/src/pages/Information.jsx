@@ -12,11 +12,13 @@ import {
 import { Button, ErrorNotice, Loading, Notice } from "../components/UI";
 import {
   STATUS,
+  isOfficialSource,
   publicTechnicalText,
   sourceCoverageText,
   sourceDateText,
   sourceDisplayName,
   sourceInstitutionText,
+  sourceOfficialUrl,
   sourceVerificationText,
   validExternalUrl,
 } from "../utils/presentation.mjs";
@@ -71,11 +73,12 @@ export function Methodology() {
         precisión geográfica del predio.
       </Notice>
       <section className="method-note">
-        <h2>Machine Learning: no activo</h2>
+        <h2>Machine Learning: experimento histórico</h2>
         <p>
-          El motor funciona sin modelos predictivos. La activación requiere
-          variable objetivo, etiquetas, baseline y validación defendibles. ATLAS
-          no presenta probabilidades de riesgo actuales.
+          El análisis de una localidad muestra un experimento sobre daño por
+          inundación reportado en 2014. No estima el riesgo de hoy y no publica
+          una probabilidad: la prueba por municipio no separa ese daño con
+          utilidad. Los factores con fuente siguen siendo la lectura principal.
         </p>
       </section>
       <Notice />
@@ -121,7 +124,7 @@ export function Sources({ catalog }) {
         />
       </div>
       {catalog.loading ? (
-        <Loading />
+        <Loading text="Cargando fuentes…" detail="Consultando el catálogo de información disponible." />
       ) : catalog.error ? (
         <ErrorNotice error={catalog.error} retry={catalog.retry} />
       ) : (
@@ -131,18 +134,21 @@ export function Sources({ catalog }) {
           </p>
           <div className="sources-grid">
             {filtered.map((s) => {
-              const url = validExternalUrl(s.original_url);
+              const url = sourceOfficialUrl(s);
+              const isOfficial = isOfficialSource(s);
               return (
                 <article className="source-card" key={s.id}>
                   <div className="source-card-top">
                     <Database size={24} />
-                    <span className="provenance-tag">
+                    <span
+                      className={`provenance-tag ${isOfficial ? "provenance-tag-verified" : ""}`}
+                    >
                       {sourceVerificationText(s)}
                     </span>
                   </div>
                   <h2>{sourceDisplayName(s)}</h2>
                   <dl>
-                    <dt>Institución declarada</dt>
+                    <dt>Institución oficial</dt>
                     <dd>{sourceInstitutionText(s)}</dd>
                     <dt>Año / versión</dt>
                     <dd>{sourceDateText(s)}</dd>
@@ -158,19 +164,15 @@ export function Sources({ catalog }) {
                       <p className="hash-value">SHA256: {s.sha256}</p>
                     )}
                   </details>
-                  {url ? (
+                  {url && (
                     <a
                       className="evidence-link"
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Fuente original <ExternalLink size={14} />
+                      Portal oficial de referencia <ExternalLink size={14} />
                     </a>
-                  ) : (
-                    <small className="source-no-url">
-                      URL original no documentada
-                    </small>
                   )}
                 </article>
               );

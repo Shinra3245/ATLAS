@@ -74,10 +74,51 @@ class CoverageSummaryOut(BaseModel):
     by_category: dict[str, Any]
 
 
+class MLFeatureOut(BaseModel):
+    id: str
+    label: str
+
+
+class MLHoldoutOut(BaseModel):
+    held_out: str
+    precision: float
+    recall: float
+    f1: float
+    true_positives: int
+    false_positives: int
+
+
+class MLValidationOut(BaseModel):
+    strategy: str
+    baseline: str
+    useful_for_a_decision: bool
+    holdouts: list[MLHoldoutOut]
+
+
+class MLLocalityOut(BaseModel):
+    recorded: str
+    recorded_label: str
+    reading: str
+
+
+class MLExperimentOut(BaseModel):
+    name: str
+    target: str
+    target_meaning: str
+    year: int
+    model: str
+    version: str
+    features: list[MLFeatureOut]
+    validation: MLValidationOut
+    locality: MLLocalityOut
+    limitations: list[str]
+
+
 class MLOut(BaseModel):
     enabled: bool
     status: str
     reason: str
+    experiment: Optional[MLExperimentOut] = None
 
 
 class AnalysisResultOut(BaseModel):

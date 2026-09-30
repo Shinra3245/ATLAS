@@ -41,3 +41,22 @@ Comando de verificación técnica:
 ```bash
 python3 scripts/demo/verify_technical.py
 ```
+
+## Re-verificación 2026-09-30 (sesión técnica)
+
+Sin cambios de estado en los diez puntos (siguen los de la tabla anterior). Se
+re-confirmó por pruebas y se endurecieron garantías:
+
+- Motor **72/72** y API **37/37** (`pytest`); incluyen pruebas nuevas de la
+  garantía "una capa faltante nunca se muestra como dato disponible ni riesgo
+  bajo" (`tests/engine/test_missing_layers_guarantee.py` y una en `tests/api`).
+- Integridad de `data/processed/v1/`: 7/7 salidas coinciden con `manifest.json`
+  (verificación no destructiva). Suite `tests/data` no ejecutada aquí (falta
+  `openpyxl` en este entorno; corresponde a Bloque 1).
+- Prioridad D: protocolos de validación con personas preparados en
+  [`../validation/VALIDATION_PROTOCOLS.md`](../validation/VALIDATION_PROTOCOLS.md),
+  marcados PENDIENTE DE VALIDACIÓN EXTERNA.
+- Procedencia y capas espaciales del núcleo: sin cambio; siguen pendientes de
+  fuentes verificadas y cotejo (Bloque 1). ML permanece apagado.
+- No se tocó `frontend/`, `data/`, ni procesos en `:8000/:8001/:5173/:5174`. Sin
+  `commit`/`push`.

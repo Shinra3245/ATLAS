@@ -40,11 +40,16 @@ class CoverageSummary:
 
 @dataclass(frozen=True)
 class MLInfo:
-    """Estado del módulo ML en el resultado (complementario y apagado)."""
+    """Estado del módulo ML en el resultado.
+
+    ``experiment`` es el bloque visible del experimento histórico. Es ``None``
+    cuando el análisis queda fuera del área y el módulo no aplica.
+    """
 
     enabled: bool
     status: MLStatus
     reason: str
+    experiment: Optional[dict[str, Any]] = None
 
 
 @dataclass(frozen=True)

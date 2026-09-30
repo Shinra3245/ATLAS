@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -9,11 +9,9 @@ import {
   FileSearch,
   FileText,
   HardHat,
-  Landmark,
   Layers,
   MapPin,
   Scale,
-  Users,
 } from "lucide-react";
 import { Header } from "../components/Header";
 import { Logo, Notice } from "../components/UI";
@@ -61,22 +59,22 @@ const benefits = [
 ];
 const audiences = [
   [
-    HardHat,
+    "/audience-studios.jpg",
     "Despachos de arquitectura e ingeniería",
     "Identifica condiciones territoriales desde las primeras etapas de diseño.",
   ],
   [
-    Building2,
+    "/audience-developers.jpg",
     "Desarrolladores inmobiliarios",
     "Consulta evidencia y compara opciones de localización.",
   ],
   [
-    Landmark,
+    "/audience-planning.jpg",
     "Gobiernos y áreas de planeación",
     "Organiza la información territorial para apoyar procesos de planeación.",
   ],
   [
-    Users,
+    "/audience-professionals.jpg",
     "Profesionales y organizaciones",
     "Explora contexto, fuentes y limitaciones para proyectos urbanos.",
   ],
@@ -84,7 +82,7 @@ const audiences = [
 const faqs = [
   [
     "¿Dónde funciona ATLAS?",
-    "El MVP cubre exclusivamente las localidades publicadas de Irapuato y Celaya. El resto de Guanajuato es una implementación futura.",
+    "ATLAS cubre exclusivamente las localidades publicadas de Irapuato y Celaya. El resto de Guanajuato es una implementación futura.",
   ],
   [
     "¿Qué tipos de proyecto puedo consultar?",
@@ -101,6 +99,17 @@ const faqs = [
 ];
 
 export function Landing({ catalog }) {
+  useEffect(() => {
+    if (!location.hash.startsWith("#") || location.hash.startsWith("#/")) return;
+    const target = decodeURIComponent(location.hash.slice(1));
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(target)?.scrollIntoView({
+        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+        block: "start",
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
   const previewLocations = catalog.locations.filter((r) =>
     ["110170001", "110070001"].includes(r.id),
   );
@@ -141,15 +150,6 @@ export function Landing({ catalog }) {
               <div className="preview-window">
                 <div className="preview-top">
                   <Logo light />
-                  <span>
-                    <MapPin size={12} />
-                    Mapa
-                  </span>
-                  <span>
-                    <Layers size={12} />
-                    Evidencia
-                  </span>
-                  <span>A / B</span>
                 </div>
                 <div className="preview-body">
                   <aside>
@@ -187,10 +187,6 @@ export function Landing({ catalog }) {
                   </div>
                 </div>
                 <div className="preview-bottom">
-                  <span>
-                    <span className="status-dot" /> Evidencia y cobertura
-                    visibles
-                  </span>
                   <a href="#/sistema" aria-label="Abrir el sistema ATLAS">
                     <ArrowRight size={17} />
                   </a>
@@ -274,6 +270,21 @@ export function Landing({ catalog }) {
                 ],
               ].map(([title, body], i) => (
                 <article className="step-card" key={title}>
+                  <svg
+                    className="step-contour"
+                    viewBox="0 0 200 140"
+                    preserveAspectRatio="xMaxYMin slice"
+                    aria-hidden="true"
+                  >
+                    <path
+                      pathLength="1"
+                      d="M118 10 C 146 8, 176 24, 190 52"
+                    />
+                    <path
+                      pathLength="1"
+                      d="M132 -2 C 168 12, 198 42, 204 78"
+                    />
+                  </svg>
                   <span className="step-number">0{i + 1}</span>
                   <h3>{title}</h3>
                   <p>{body}</p>
@@ -299,11 +310,15 @@ export function Landing({ catalog }) {
             </p>
           </div>
           <div className="audience-grid">
-            {audiences.map(([Icon, title, body]) => (
+            {audiences.map(([image, title, body]) => (
               <article className="audience-card" key={title}>
-                <Icon size={31} />
-                <h3>{title}</h3>
-                <p>{body}</p>
+                <div className="audience-photo">
+                  <img src={image} alt="" />
+                </div>
+                <div className="audience-copy">
+                  <h3>{title}</h3>
+                  <p>{body}</p>
+                </div>
               </article>
             ))}
           </div>
@@ -342,7 +357,7 @@ export function Landing({ catalog }) {
       <footer className="site-footer container">
         <div>
           <Logo />
-          <small>MVP: Irapuato y Celaya · HackaTec / InnovaTecNM 2026</small>
+          <small>Irapuato y Celaya · HackaTec / InnovaTecNM 2026</small>
         </div>
         <nav aria-label="Información del proyecto">
           <a href="#/metodologia">Metodología</a>

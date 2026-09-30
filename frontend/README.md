@@ -41,12 +41,13 @@ No se configuró publicación en Internet, TLS, dominio ni autenticación. Este 
 | `#/metodologia` | Metodología y alcance |
 | `#/fuentes` | Catálogo real de fuentes |
 | `#/estados` | Seis estados de información y limitaciones |
-| `#/loaders` | Galería independiente de tres loaders animados; vista de prueba sin consultas a la API |
 | `#/ficha/a`, `#/ficha/b` | Ficha de un resultado existente |
 
 La selección admite solo localidades publicadas de Irapuato y Celaya, mediante catálogo o marcador. CVEGEO y coordenadas se conservan al consultar. La comparación bloquea A = B y utiliza el mismo tipo de proyecto para ambas localidades. Las fichas dependen del análisis de la sesión; recargar la página elimina los resultados en memoria y exige volver a consultar. No se implementaron cuentas, historial ni almacenamiento persistente.
 
 ## Integración y significado de la información
+
+ATLAS Geo Pulse utiliza el logo original con ondas topográficas. Las cargas de catálogos lo muestran sin etapas tras 300 ms; el mapa base tras 450 ms, solo en su carga inicial o al reactivarlo. Las consultas muestran el icono en el botón y, si superan 1.2 segundos, un modal cancelable con el estado real de cada solicitud. La comparación consulta análisis y contraste en paralelo y marca cada operación al recibir y validar su respuesta. No se simulan porcentajes ni avances internos del backend. El mapa deja de esperar tras 12 segundos sin completar su carga y mantiene disponible el catálogo; moverlo o ampliarlo después de cargar no abre otro loader. Se respeta movimiento reducido. Las fichas y el resumen en memoria se muestran directamente.
 
 Contrato: `../docs/api/REST_CONTRACT_V1.md`. Todas las consultas pasan por `/api`; no hay respuestas ficticias de respaldo. Se valida identidad, esquema y estados antes de mostrar un resultado. Se conservan nulos, temporalidad, procedencia parcial y bloqueos; no se calculan puntuaciones, porcentajes de riesgo, ganadores ni dictámenes.
 

@@ -1,4 +1,4 @@
-# ML — Experimentos (estado: DISABLED_PENDING_TARGET_VALIDATION)
+# ML — Experimentos (estado: HISTORICAL_EXPERIMENT)
 
 ML es COMPLEMENTARIO. ATLAS funciona sin ML. No se entrena ningún modelo hasta
 superar el gate de validación completo. El estado se declara en

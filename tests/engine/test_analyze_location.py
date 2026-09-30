@@ -175,10 +175,14 @@ def test_all_project_types_produce_result(project_type):
 # ------------------------------------------------------------------- ML / claves
 
 
-def test_ml_disabled_does_not_break():
+def test_historical_experiment_is_visible_without_a_score():
     result = analyze_location(IRAPUATO, "building").to_dict()
-    assert result["ml"]["enabled"] is False
-    assert result["ml"]["status"] == "DISABLED_PENDING_TARGET_VALIDATION"
+    ml = result["ml"]
+    assert ml["enabled"] is True
+    assert ml["status"] == "HISTORICAL_EXPERIMENT"
+    assert ml["experiment"]["validation"]["useful_for_a_decision"] is False
+    assert ml["experiment"]["locality"]["recorded"] == "sin_dato"
+    assert "probabilidad" not in ml["experiment"]["locality"]["reading"].lower()
 
 
 def test_no_forbidden_keys(fixture_source):

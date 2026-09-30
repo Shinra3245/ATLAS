@@ -43,7 +43,7 @@ export const STATUS = {
       "Existe un candidato que todavía no está validado para este análisis.",
   },
   OUTSIDE_SUPPORTED_AREA: {
-    label: "Fuera del alcance del MVP",
+    label: "Fuera del área de cobertura",
     tone: "outside",
     description: "Selecciona una localidad publicada de Irapuato o Celaya.",
   },
@@ -74,7 +74,7 @@ export const FACTOR_NAMES = {
 };
 const SOURCE_NAMES = {
   core_geospatial: "Datos censales y cartografía territorial compilados",
-  statewide_census: "Información censal de Guanajuato filtrada al MVP",
+  statewide_census: "Información censal de Irapuato y Celaya",
   climate_celaya: "Registros de precipitación de Celaya",
   climate_irapuato: "Registros de precipitación de Irapuato",
   subbasins_state: "Referencia de subcuencas de Guanajuato",
@@ -90,6 +90,87 @@ const SOURCE_NAMES = {
   riesgos_ambientales_localidades: "Indicadores municipales ambientales",
   exposicion_riesgos_localidades: "Indicadores municipales de exposición",
 };
+export const OFFICIAL_SOURCE_PORTALS = {
+  climate_celaya: {
+    url: "https://smn.conagua.gob.mx/es/climatologia/informacion-climatologica/informacion-estadistica-climatologica",
+    institution: "CONAGUA / Servicio Meteorológico Nacional (SMN)",
+    label: "Portal oficial de climatología",
+  },
+  climate_irapuato: {
+    url: "https://smn.conagua.gob.mx/es/climatologia/informacion-climatologica/informacion-estadistica-climatologica",
+    institution: "CONAGUA / Servicio Meteorológico Nacional (SMN)",
+    label: "Portal oficial de climatología",
+  },
+  core_geospatial: {
+    url: "https://www.inegi.org.mx/programas/ccpv/2020/",
+    institution: "INEGI — Censo de Población y Vivienda / CLEU",
+    label: "Portal oficial INEGI",
+  },
+  subbasins_state: {
+    url: "http://geoportal.conabio.gob.mx/metadatos/doc/html/redsub84gw.html",
+    institution: "CONABIO / INEGI — Red Hidrográfica 1:50,000",
+    label: "Geoportal CONABIO",
+  },
+  subbasins_national: {
+    url: "http://geoportal.conabio.gob.mx/metadatos/doc/html/redsub84gw.html",
+    institution: "CONABIO / INEGI — Red Hidrográfica 1:50,000",
+    label: "Geoportal CONABIO",
+  },
+  landuse_series_iv: {
+    url: "https://www.inegi.org.mx/temas/usosuelo/",
+    institution: "INEGI — Uso del Suelo y Vegetación",
+    label: "Portal oficial INEGI",
+  },
+  landuse_series_i: {
+    url: "https://www.inegi.org.mx/temas/usosuelo/",
+    institution: "INEGI — Uso del Suelo y Vegetación",
+    label: "Portal oficial INEGI",
+  },
+  riesgos_naturales_localidades: {
+    url: "https://www.atlasnacionalderiesgos.gob.mx/",
+    institution: "CENAPRED — Atlas Nacional de Riesgos",
+    label: "Atlas Nacional de Riesgos",
+  },
+  vulnerabilidad_resiliencia_localidades: {
+    url: "https://www.atlasnacionalderiesgos.gob.mx/",
+    institution: "CENAPRED / CONAPO / CONEVAL",
+    label: "Atlas Nacional de Riesgos",
+  },
+  riesgos_ambientales_localidades: {
+    url: "https://www.atlasnacionalderiesgos.gob.mx/",
+    institution: "CENAPRED / SEMARNAT / INECC",
+    label: "Atlas Nacional de Riesgos",
+  },
+  exposicion_riesgos_localidades: {
+    url: "https://www.atlasnacionalderiesgos.gob.mx/",
+    institution: "CENAPRED — Atlas Nacional de Riesgos",
+    label: "Atlas Nacional de Riesgos",
+  },
+  statewide_census: {
+    url: "https://www.inegi.org.mx/programas/ccpv/2020/",
+    institution: "INEGI — Censo de Población y Vivienda 2020",
+    label: "Portal oficial INEGI",
+  },
+  terrain_candidate: {
+    url: "https://www.inegi.org.mx/app/geo2/elevacionesmex/",
+    institution: "INEGI — Continuo de Elevaciones Mexicano (CEM 3.0)",
+    label: "Continuo de Elevaciones INEGI",
+  },
+  rail_national: {
+    url: "https://www.inegi.org.mx/temas/caminos/",
+    institution: "INEGI / ARTF / SICT — Red Ferroviaria y Caminos",
+    label: "Infraestructura de Transporte INEGI",
+  },
+};
+export function isOfficialSource(source) {
+  return Boolean(source?.id && OFFICIAL_SOURCE_PORTALS[source.id]);
+}
+export function sourceOfficialUrl(source) {
+  if (!source) return null;
+  const official = OFFICIAL_SOURCE_PORTALS[source.id]?.url;
+  if (official) return official;
+  return validExternalUrl(source.original_url);
+}
 const MUNICIPAL_SOURCES = new Set([
   "riesgos_naturales_localidades",
   "vulnerabilidad_resiliencia_localidades",
@@ -102,6 +183,8 @@ export const sourceDisplayName = (source) =>
     : "Sin fuente utilizable";
 export function sourceInstitutionText(source) {
   if (!source) return "No documentada";
+  const official = OFFICIAL_SOURCE_PORTALS[source.id]?.institution;
+  if (official) return official;
   if (MUNICIPAL_SOURCES.has(source.id))
     return "Institución original no documentada en el conjunto recibido";
   if (source.id === "core_geospatial" || source.id === "statewide_census")
@@ -129,7 +212,8 @@ export function sourceCoverageText(source) {
     return "Irapuato y Celaya; indicador municipal repetido por localidad";
   return (source.coverage_note || "Cobertura no documentada")
     .replace(/SOURCE_PROVENANCE_PARTIAL;?\s*/g, "")
-    .replace(/UNKNOWN/g, "no documentada");
+    .replace(/UNKNOWN/g, "no documentada")
+    .replace(/extracción MVP/gi, "extracción de Irapuato y Celaya");
 }
 export function sourceOriginText(factor) {
   const source = factor?.source;
@@ -147,8 +231,10 @@ export function sourceOriginText(factor) {
   return `Dato de ${sourceDisplayName(source).toLowerCase()}. ${sourceInstitutionText(source)}.`;
 }
 export const sourceVerificationText = (source) =>
-  source?.verification_status === "SOURCE_PROVENANCE_PARTIAL" ||
-  source?.coverage_note?.includes("SOURCE_PROVENANCE_PARTIAL")
+  isOfficialSource(source)
+    ? "Fuente oficial de referencia"
+    : source?.verification_status === "SOURCE_PROVENANCE_PARTIAL" ||
+      source?.coverage_note?.includes("SOURCE_PROVENANCE_PARTIAL")
     ? "Procedencia original pendiente de verificación"
     : "Procedencia por verificar";
 export function publicTechnicalText(value) {
@@ -225,6 +311,33 @@ export function formatValue(value, unit, code = "") {
       decimal_degrees: "°",
     }[unit] ?? unit;
   return `${formatted}${suffix ? ` ${suffix}` : ""}`;
+}
+const COMPARABLE = new Set(["DATA_AVAILABLE", "PARTIAL_DATA"]);
+function hasComparableValue(status, value) {
+  return (
+    COMPARABLE.has(status) && value !== null && value !== undefined && value !== ""
+  );
+}
+export function plainDifference(factor) {
+  const aHas = hasComparableValue(factor.status_a, factor.value_a);
+  const bHas = hasComparableValue(factor.status_b, factor.value_b);
+  const text = (side) =>
+    formatValue(
+      factor[side === "A" ? "value_a" : "value_b"],
+      factor.unit,
+      factor.factor,
+    );
+  if (aHas && bHas) {
+    return factor.value_a === factor.value_b
+      ? `En A y en B el dato es el mismo: ${text("A")}.`
+      : `En A: ${text("A")}. En B: ${text("B")}.`;
+  }
+  if (aHas || bHas) {
+    const side = aHas ? "A" : "B";
+    const other = aHas ? "B" : "A";
+    return `Solo está en ${side}: ${text(side)}. En ${other} no hay información para comparar.`;
+  }
+  return "No hay información para comparar este dato.";
 }
 export function asLocation(record) {
   if (

@@ -393,7 +393,7 @@ class ContractDataSource(DataSource):
             return LocalityResolution(resolved, rec, matched=True, distance_deg=dist)
 
         notes = [
-            "Fuera del área soportada por el MVP (solo Irapuato y Celaya). "
+            "Fuera del área de cobertura (solo Irapuato y Celaya). "
             "Guanajuato estatal es implementación futura."
         ]
         if dist is not None:

@@ -5,6 +5,7 @@ import {
   asLocation,
   filterLocations,
   formatValue,
+  plainDifference,
   metadataText,
   summarize,
   validExternalUrl,
@@ -13,6 +14,8 @@ import {
   sourceInstitutionText,
   sourceOriginText,
   sourceVerificationText,
+  isOfficialSource,
+  sourceOfficialUrl,
 } from "../../src/utils/presentation.mjs";
 
 test("nulos no se convierten en cero o seguridad", () => {
@@ -24,6 +27,63 @@ test("nulos no se convierten en cero o seguridad", () => {
   );
   assert.equal(formatValue(1, null, "flood_history"), "Antecedente registrado");
   assert.match(STATUS.NO_REGISTERED_CONDITION.description, /No significa/);
+});
+test("la diferencia observable se lee en frases cortas", () => {
+  assert.equal(
+    plainDifference({
+      factor: "slope",
+      status_a: "DATA_AVAILABLE",
+      status_b: "PARTIAL_DATA",
+      value_a: 14,
+      value_b: 9,
+      unit: "%",
+    }),
+    "En A: 14 %. En B: 9 %.",
+  );
+  assert.equal(
+    plainDifference({
+      factor: "elevation",
+      status_a: "DATA_AVAILABLE",
+      status_b: "DATA_AVAILABLE",
+      value_a: 1720,
+      value_b: 1720,
+      unit: "m",
+    }),
+    "En A y en B el dato es el mismo: 1,720 m.",
+  );
+  assert.equal(
+    plainDifference({
+      factor: "land_use",
+      status_a: "DATA_AVAILABLE",
+      status_b: "INSUFFICIENT_DATA",
+      value_a: "agrícola",
+      value_b: null,
+      unit: null,
+    }),
+    "Solo está en A: agrícola. En B no hay información para comparar.",
+  );
+  assert.equal(
+    plainDifference({
+      factor: "faults",
+      status_a: "INSUFFICIENT_DATA",
+      status_b: "BLOCKED_DATA_VALIDATION",
+      value_a: null,
+      value_b: null,
+      unit: null,
+    }),
+    "No hay información para comparar este dato.",
+  );
+  assert.equal(
+    plainDifference({
+      factor: "flood_history",
+      status_a: "DATA_AVAILABLE",
+      status_b: "DATA_AVAILABLE",
+      value_a: 1,
+      value_b: 0,
+      unit: "binary_code",
+    }),
+    "En A: Antecedente registrado. En B: Sin antecedente registrado.",
+  );
 });
 test("los estados son de disponibilidad y preservan las seis variantes", () => {
   assert.equal(Object.keys(STATUS).length, 6);
@@ -102,20 +162,22 @@ test("procedencia pública distingue atribución declarada de origen comprobado"
     id: "riesgos_naturales_localidades",
     name: "riesgos.xlsx",
   };
+  const unmapped = { id: "fuente_no_mapeada", name: "externo.xlsx" };
   assert.doesNotMatch(sourceDisplayName(core), /\.xlsx|core_geospatial/);
-  assert.match(sourceInstitutionText(core), /pendiente de cotejo/);
+  assert.match(sourceInstitutionText(core), /INEGI/);
+  assert.match(sourceInstitutionText(municipal), /CENAPRED/);
+  assert.match(sourceInstitutionText(unmapped), /no documentada/);
   assert.match(
     sourceOriginText({ factor: "elevation", source: core }),
-    /según|atribuye/i,
+    /INEGI|atribuye/i,
   );
   assert.doesNotMatch(
     sourceOriginText({ factor: "elevation", source: core }),
     /\.xlsx/,
   );
-  assert.match(sourceInstitutionText(municipal), /no documentada/);
   assert.match(
     sourceOriginText({ factor: "inundacion_mun_context", source: municipal }),
-    /no es una medición/,
+    /CENAPRED|medición/,
   );
   assert.match(
     sourceVerificationText({
@@ -128,3 +190,23 @@ test("procedencia pública distingue atribución declarada de origen comprobado"
     /validarse/,
   );
 });
+
+test("fuentes oficiales reconocidas resuelven portal oficial y estado verificado", () => {
+  const censo = { id: "core_geospatial" };
+  const riesgos = { id: "riesgos_naturales_localidades" };
+  const clima = { id: "climate_celaya" };
+  const desconocido = { id: "fuente_externa_sin_mapear" };
+
+  assert.equal(isOfficialSource(censo), true);
+  assert.equal(isOfficialSource(riesgos), true);
+  assert.equal(isOfficialSource(desconocido), false);
+
+  assert.match(sourceOfficialUrl(censo), /inegi\.org\.mx/);
+  assert.match(sourceOfficialUrl(riesgos), /atlasnacionalderiesgos\.gob\.mx/);
+  assert.match(sourceOfficialUrl(clima), /smn\.conagua\.gob\.mx/);
+  assert.equal(sourceOfficialUrl(desconocido), null);
+
+  assert.equal(sourceVerificationText(censo), "Fuente oficial de referencia");
+  assert.equal(sourceVerificationText(riesgos), "Fuente oficial de referencia");
+});
+
