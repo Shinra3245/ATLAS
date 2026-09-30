@@ -31,31 +31,26 @@ READING = (
 
 _FEATURES: list[dict[str, str]] = [
     {"id": "altitude_m", "label": "Altitud censal"},
-    {"id": "dist_rio_arroyo_m", "label": "Distancia a río o arroyo"},
-    {"id": "dist_cuerpo_agua_m", "label": "Distancia a cuerpo de agua"},
     {"id": "dist_canal_m", "label": "Distancia a canal"},
-    {"id": "dist_infra_hidrica_m", "label": "Distancia a infraestructura hídrica"},
-    {"id": "dist_camino_m", "label": "Distancia a camino"},
-    {"id": "dist_carretera_m", "label": "Distancia a carretera"},
     {"id": "pobtot", "label": "Población total"},
 ]
 
 _HOLDOUTS: list[dict[str, Any]] = [
     {
         "held_out": "Celaya",
-        "precision": 0.062,
-        "recall": 0.333,
-        "f1": 0.105,
-        "true_positives": 6,
-        "false_positives": 90,
+        "precision": 0.250,
+        "recall": 0.111,
+        "f1": 0.154,
+        "true_positives": 2,
+        "false_positives": 6,
     },
     {
         "held_out": "Irapuato",
-        "precision": 0.041,
-        "recall": 0.5,
-        "f1": 0.077,
-        "true_positives": 9,
-        "false_positives": 208,
+        "precision": 0.058,
+        "recall": 0.556,
+        "f1": 0.106,
+        "true_positives": 10,
+        "false_positives": 161,
     },
 ]
 
@@ -63,7 +58,9 @@ _LIMITATIONS: list[str] = [
     "La etiqueta es un antecedente de daño en 2014, no la condición del sitio hoy.",
     "La procedencia de esa etiqueta no está verificada de forma independiente.",
     "De 755 localidades, 610 tienen etiqueta y 36 registran daño. 145 quedan sin dato y no se rellenan.",
-    "En la prueba por municipio, la precisión sobre el daño quedó en 6.2 % para Celaya y 4.1 % para Irapuato.",
+    "El entrenamiento usa solo altitud, distancia al canal y población: las variables cuyo sentido respecto al daño coincide en Celaya e Irapuato.",
+    "Esa selección miró la etiqueta de los dos municipios, así que la prueba no es ciega respecto de qué variables entran.",
+    "En la prueba por municipio, la precisión quedó en 25.0 % para Celaya (2 de 18) y en 5.8 % para Irapuato (10 de 18, con 161 marcas falsas).",
     "No sustituye los factores publicados ni autoriza una decisión de obra.",
 ]
 
@@ -105,13 +102,14 @@ def historical_experiment_info(record: Optional[dict[str, Any]]) -> MLInfo:
                 "0 sin daño y vacío sin información."
             ),
             "year": 2014,
-            "model": "Regresión logística con mayor peso en la clase con daño",
-            "version": "historical-flood-2014-v1",
+            "model": "Regresión logística con mayor peso en la clase con daño y solo variables coincidentes",
+            "version": "historical-flood-2014-v2",
             "features": list(_FEATURES),
             "validation": {
                 "strategy": (
                     "Regresión logística entrenada en un municipio y probada en "
-                    "el otro. No se usaron las demás etiquetas de daño de 2014."
+                    "el otro. Solo entran las variables cuyo sentido coincide en "
+                    "ambos municipios. No se usaron las demás etiquetas de daño de 2014."
                 ),
                 "baseline": (
                     "Clase mayoritaria: predecir siempre sin daño. El F1 de la "

@@ -48,7 +48,7 @@ GATE_CHECKS: list[GateCheck] = [
     GateCheck(10, "train_test", True, "Entrenar en un municipio y probar en el otro."),
     GateCheck(11, "baseline", True, "Clase mayoritaria: F1 de la clase con daño = 0."),
     GateCheck(12, "metricas", True, "Precisión, recall y F1 en Celaya e Irapuato."),
-    GateCheck(13, "utilidad_real", False, "Precisión 6.2 % y 4.1 %. No se publica susceptibilidad."),
+    GateCheck(13, "utilidad_real", False, "Precisión 25.0 % y 5.8 % con variables coincidentes. No se publica susceptibilidad."),
 ]
 
 

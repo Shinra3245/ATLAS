@@ -234,7 +234,7 @@ Dentro del área soportada `enabled` es `true` y `experiment` describe la etique
   "reason": "Experimento histórico sobre daño por inundación reportado en 2014...",
   "experiment": {
     "name": "Susceptibilidad histórica a inundación",
-    "version": "historical-flood-2014-v1",
+    "version": "historical-flood-2014-v2",
     "locality": {
       "recorded": "sin_dato",
       "recorded_label": "Sin información suficiente en 2014.",
