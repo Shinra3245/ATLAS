@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import Any, Optional
 
 from .data_source import DataSource, default_data_source
-from .ml_info import disabled_ml_info
+from .ml_info import historical_experiment_info
 
 
 def list_sources(data_source: Optional[DataSource] = None) -> list[dict[str, Any]]:
@@ -36,9 +36,9 @@ def list_locations(data_source: Optional[DataSource] = None) -> list[dict[str, A
 
 
 def ml_status() -> dict[str, Any]:
-    """Estado del módulo ML (deshabilitado). Valores de ``MLStatus``."""
+    """Estado global del experimento histórico. No incluye una localidad."""
 
-    info = disabled_ml_info()
+    info = historical_experiment_info(None)
     return {
         "enabled": info.enabled,
         "status": info.status.value,

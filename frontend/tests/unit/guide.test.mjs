@@ -25,6 +25,8 @@ test("las vistas de información explican su contenido", () => {
   assert.match(guideMoment({ ...base, route: "/estados" }).message, /disponibilidad/);
   assert.equal(guideMoment({ ...base, route: "/ficha/a" }).expression, "idle");
   assert.match(guideMoment({ ...base, route: "/ficha/b" }).message, /ficha/);
+  assert.match(guideMoment({ ...base, route: "/acceso" }).message, /crea una cuenta/);
+  assert.match(guideMoment({ ...base, route: "/planes" }).message, /no cobra/);
 });
 
 test("una ruta desconocida no inventa una pantalla", () => {

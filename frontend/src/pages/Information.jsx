@@ -71,11 +71,12 @@ export function Methodology() {
         precisión geográfica del predio.
       </Notice>
       <section className="method-note">
-        <h2>Machine Learning: no activo</h2>
+        <h2>Machine Learning: experimento histórico</h2>
         <p>
-          El motor funciona sin modelos predictivos. La activación requiere
-          variable objetivo, etiquetas, baseline y validación defendibles. ATLAS
-          no presenta probabilidades de riesgo actuales.
+          El análisis de una localidad muestra un experimento sobre daño por
+          inundación reportado en 2014. No estima el riesgo de hoy y no publica
+          una probabilidad: la prueba por municipio no separa ese daño con
+          utilidad. Los factores con fuente siguen siendo la lectura principal.
         </p>
       </section>
       <Notice />
@@ -121,7 +122,7 @@ export function Sources({ catalog }) {
         />
       </div>
       {catalog.loading ? (
-        <Loading />
+        <Loading text="Cargando fuentes…" detail="Consultando el catálogo de información disponible." />
       ) : catalog.error ? (
         <ErrorNotice error={catalog.error} retry={catalog.retry} />
       ) : (

@@ -33,7 +33,7 @@ from .data_source import (
     LocalityResolution,
     default_data_source,
 )
-from .ml_info import disabled_ml_info
+from .ml_info import disabled_ml_info, historical_experiment_info
 
 #: Versión del motor. Forma parte del contrato y de la trazabilidad.
 ENGINE_VERSION = "engine/1.0.0-mvp"
@@ -238,5 +238,5 @@ def analyze_location(
         sources=sources,
         limitations=limitations,
         review_items=review_items,
-        ml=disabled_ml_info(),
+        ml=historical_experiment_info(resolution.record),
     )

@@ -226,6 +226,33 @@ export function formatValue(value, unit, code = "") {
     }[unit] ?? unit;
   return `${formatted}${suffix ? ` ${suffix}` : ""}`;
 }
+const COMPARABLE = new Set(["DATA_AVAILABLE", "PARTIAL_DATA"]);
+function hasComparableValue(status, value) {
+  return (
+    COMPARABLE.has(status) && value !== null && value !== undefined && value !== ""
+  );
+}
+export function plainDifference(factor) {
+  const aHas = hasComparableValue(factor.status_a, factor.value_a);
+  const bHas = hasComparableValue(factor.status_b, factor.value_b);
+  const text = (side) =>
+    formatValue(
+      factor[side === "A" ? "value_a" : "value_b"],
+      factor.unit,
+      factor.factor,
+    );
+  if (aHas && bHas) {
+    return factor.value_a === factor.value_b
+      ? `En A y en B el dato es el mismo: ${text("A")}.`
+      : `En A: ${text("A")}. En B: ${text("B")}.`;
+  }
+  if (aHas || bHas) {
+    const side = aHas ? "A" : "B";
+    const other = aHas ? "B" : "A";
+    return `Solo está en ${side}: ${text(side)}. En ${other} no hay información para comparar.`;
+  }
+  return "No hay información para comparar este dato.";
+}
 export function asLocation(record) {
   if (
     !record?.id ||

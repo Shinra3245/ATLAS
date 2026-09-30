@@ -80,7 +80,7 @@ from engine import list_sources, list_layers, list_locations, ml_status
 list_sources()    # 14 fuentes recibidas (SOURCE_PROVENANCE_PARTIAL visible)
 list_layers()     # 53 variables por localidad (no geometría continua)
 list_locations()  # 755 localidades (id CVEGEO, municipio, lat/lon CRS_UNKNOWN)
-ml_status()        # {"enabled": false, "status": "DISABLED_PENDING_TARGET_VALIDATION", ...}
+ml_status()        # {"enabled": true, "status": "HISTORICAL_EXPERIMENT", ...}
 ```
 
 Los catálogos trasladan las marcas `UNKNOWN`/`PENDING_SOURCE_PROVENANCE` sin
@@ -223,13 +223,25 @@ Cada condición/factor/contexto expresa:
 }
 ```
 
-### `ml` (deshabilitado)
+### `ml` (experimento histórico, sin susceptibilidad)
+
+Dentro del área soportada `enabled` es `true` y `experiment` describe la etiqueta de 2014 de esa localidad. `validation.useful_for_a_decision` es `false`. Fuera del área, `enabled` es `false` y `experiment` es `null`.
 
 ```json
 {
-  "enabled": false,
-  "status": "DISABLED_PENDING_TARGET_VALIDATION",
-  "reason": "Sin variable objetivo validada. El módulo ML permanece deshabilitado..."
+  "enabled": true,
+  "status": "HISTORICAL_EXPERIMENT",
+  "reason": "Experimento histórico sobre daño por inundación reportado en 2014...",
+  "experiment": {
+    "name": "Susceptibilidad histórica a inundación",
+    "version": "historical-flood-2014-v1",
+    "locality": {
+      "recorded": "sin_dato",
+      "recorded_label": "Sin información suficiente en 2014.",
+      "reading": "No se publica una susceptibilidad para esta localidad..."
+    },
+    "validation": { "useful_for_a_decision": false }
+  }
 }
 ```
 
@@ -366,7 +378,7 @@ Limitaciones:
 - Coordenadas `CRS_UNKNOWN`; distancias precalculadas en EPSG:6372 (no reprocesadas).
 - Procedencia de fuentes `SOURCE_PROVENANCE_PARTIAL`; instituciones/URL/licencia `UNKNOWN`/`PENDING`.
 - La altitud censal no es un DEM y no debe usarse para derivar pendiente.
-- El módulo ML permanece `DISABLED_PENDING_TARGET_VALIDATION`.
+- El módulo ML publica `HISTORICAL_EXPERIMENT` y no asigna una susceptibilidad.
 - Capacidades pendientes (DEM, pendiente, fallas, laderas, uso de suelo actual,
   inundación moderna, subcuenca por intersección): ver `data/processed/v1/*` y
   `coordination/requests/from_block_2/TO_BLOCK_1_REQ_001.md`.

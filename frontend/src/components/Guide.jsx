@@ -5,8 +5,21 @@ import { happy, idle, thinking, unsure } from "blobatar/expression";
 import "blobatar/motion.css";
 import "blobatar/gaze.css";
 import { guideMoment } from "../guide/moments.mjs";
+import { tourDone } from "../guide/tour.mjs";
+import { api } from "../services/api.mjs";
+import {
+  PROJECTS,
+  STATUS,
+  allFactors,
+  factorName,
+  formatValue,
+  isMunicipal,
+} from "../utils/presentation.mjs";
 
 const EXPRESSIONS = { happy, idle, thinking, unsure };
+const CHAT_GREETING = "¿Quieres que te explique el funcionamiento de ATLAS?";
+const CHAT_POPUP = "¡Hola! ¿Buscas ayuda?";
+const TOUR_OFFER = "Hola, soy Geo. ¿Buscas ayuda?";
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 function svgEl(name, attrs) {
@@ -43,37 +56,182 @@ function mountHelmet(bob) {
   return helmet;
 }
 
+function factorBrief(result) {
+  if (!result) return [];
+  return allFactors(result)
+    .filter((factor) => !isMunicipal(factor))
+    .slice(0, 16)
+    .map((factor) => ({
+      name: String(factorName(factor) || "Factor").slice(0, 80),
+      status: String(STATUS[factor.status]?.label || factor.status || "Sin estado").slice(0, 40),
+      value: String(formatValue(factor.value, factor.unit, factor.factor)).slice(0, 80),
+    }))
+    .filter((item) => item.name && item.status);
+}
+
+function bubbleText(text) {
+  return String(text).replace(/\*\*/g, "");
+}
+
+function screenContext(state, note) {
+  return {
+    route: state.route || "",
+    phase: state.phase || "",
+    municipality: state.municipality || "",
+    project: PROJECTS[state.project] || state.project || "",
+    locality_a: state.localityA || "",
+    locality_b: state.localityB || "",
+    note: note || "",
+    factors_a: factorBrief(state.resultA),
+    factors_b: factorBrief(state.resultB),
+  };
+}
+
 export function Guide(state) {
   const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [draft, setDraft] = useState("");
+  const [sending, setSending] = useState(false);
+  const [chatError, setChatError] = useState(null);
   const faceRef = useRef(null);
+  const threadRef = useRef(null);
+  const inputRef = useRef(null);
+  const abortRef = useRef(null);
+  const generation = useRef(0);
   const { ref: gazeRef } = useGaze({ travel: 3, lookAt: "pointer" });
+  const [tourFinished, setTourFinished] = useState(() => tourDone());
   const { expression, message, prompt } = guideMoment(state);
-  const revealed = open || !prompt;
+  const revealed = tourFinished && (open || !prompt);
+  const popup = tourFinished ? CHAT_POPUP : TOUR_OFFER;
+
+  useEffect(() => {
+    function markFinished() {
+      setTourFinished(true);
+    }
+    window.addEventListener("atlas:tour-done", markFinished);
+    return () => window.removeEventListener("atlas:tour-done", markFinished);
+  }, []);
+
+  function openGuide() {
+    if (!tourFinished) {
+      window.dispatchEvent(new Event("atlas:tour-start"));
+      return;
+    }
+    setOpen(true);
+  }
+  const liveExpression = sending ? "thinking" : chatError ? "unsure" : expression;
+
   useEffect(() => {
     setOpen(false);
   }, [message]);
+  useEffect(() => {
+    generation.current += 1;
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setSending(false);
+    setMessages([]);
+    setChatError(null);
+  }, [state.route, state.phase]);
+  useEffect(() => {
+    const node = threadRef.current;
+    if (node) node.scrollTop = node.scrollHeight;
+  }, [messages, sending, chatError, revealed]);
+  useEffect(() => {
+    if (open) inputRef.current?.focus();
+  }, [open]);
+  useEffect(() => () => abortRef.current?.abort(), []);
   useEffect(() => {
     const bob = faceRef.current?.querySelector(".mo-bob");
     if (!bob || bob.querySelector(":scope > .guide-helmet")) return;
     const helmet = mountHelmet(bob);
     return () => helmet.remove();
-  }, [expression]);
+  }, [liveExpression]);
+
+  async function send(event) {
+    event.preventDefault();
+    const content = draft.trim();
+    if (!content || sending) return;
+    const next = [...messages, { role: "user", content }];
+    const stamp = generation.current;
+    setMessages(next);
+    setDraft("");
+    setChatError(null);
+    setSending(true);
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+    try {
+      const data = await api.assistant(next, screenContext(state, message), controller.signal);
+      if (controller.signal.aborted || stamp !== generation.current) return;
+      setMessages((current) => [...current, { role: "assistant", content: data.reply }]);
+    } catch (error) {
+      if (controller.signal.aborted || stamp !== generation.current) return;
+      // Un intento fallido no debe dejar dos turnos de usuario seguidos al reintentar.
+      setMessages((current) => current.slice(0, -1));
+      setDraft(content);
+      setChatError(error.message || "No pude responder. Intenta de nuevo.");
+    } finally {
+      if (abortRef.current === controller) {
+        abortRef.current = null;
+        setSending(false);
+      }
+    }
+  }
+
   return (
     <aside className="guide" aria-label="Guía de ATLAS">
       {revealed ? (
-        <div className="guide-bubble">
-          <p className="guide-message" aria-live="polite">
-            {message}
-          </p>
+        <div className="guide-bubble atlas-chat">
+          <div className="atlas-chat-frame">
+            <div className="atlas-chat-header">
+              <h2>Asistente</h2>
+              <div className="atlas-chat-status">En línea</div>
+            </div>
+            <div
+              className="atlas-chat-display"
+              id="chatDisplay"
+              ref={threadRef}
+              aria-live="polite"
+            >
+              <div className="chat-message chat-message-assistant">
+                {bubbleText(prompt ? CHAT_GREETING : message)}
+              </div>
+              {messages.map((turn, index) => (
+                <div
+                  key={`${turn.role}-${index}`}
+                  className={`chat-message chat-message-${turn.role === "user" ? "user" : "assistant"}`}
+                >
+                  {bubbleText(turn.content)}
+                </div>
+              ))}
+              {sending && <div className="chat-message chat-message-assistant">Estoy pensando…</div>}
+              {chatError && <p className="atlas-chat-error">{chatError}</p>}
+            </div>
+            <form className="atlas-chat-footer" onSubmit={send}>
+              <input
+                ref={inputRef}
+                id="chatInput"
+                value={draft}
+                onChange={(event) => setDraft(event.target.value)}
+                placeholder="Escribe tu mensaje…"
+                aria-label="Mensaje para la guía"
+                maxLength={1500}
+                disabled={sending}
+              />
+              <button id="sendButton" type="submit" disabled={sending || !draft.trim()}>
+                Enviar
+              </button>
+            </form>
+          </div>
         </div>
       ) : (
         <button
           type="button"
           key={prompt}
           className="guide-bubble guide-bubble-prompt"
-          onClick={() => setOpen(true)}
+          onClick={openGuide}
         >
-          <span className="guide-message">{prompt}</span>
+          <span className="guide-message">{popup}</span>
         </button>
       )}
       <button
@@ -81,8 +239,12 @@ export function Guide(state) {
         ref={faceRef}
         className="guide-toggle"
         aria-expanded={revealed}
-        aria-label={revealed ? "Ocultar la explicación" : "Mostrar la explicación"}
+        aria-label={tourFinished ? (revealed ? "Ocultar la explicación" : "Mostrar la explicación") : "Empezar el recorrido"}
         onClick={() => {
+          if (!tourFinished) {
+            openGuide();
+            return;
+          }
           if (prompt) setOpen((value) => !value);
         }}
       >
@@ -94,7 +256,7 @@ export function Guide(state) {
           ref={gazeRef}
           animate="always"
           size={112}
-          expression={EXPRESSIONS[expression] ?? unsure}
+          expression={EXPRESSIONS[liveExpression] ?? unsure}
           title="Guía de ATLAS"
         />
       </button>

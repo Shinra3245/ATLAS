@@ -43,6 +43,7 @@ def test_real_flood_damage_reported_is_available():
     assert flood["value"] is True
     assert flood["temporal_context"] == "historical"
     assert flood["source"]["is_test_fixture"] is False
+    assert result["ml"]["experiment"]["locality"]["recorded"] == "con_dano"
 
 
 def test_real_flood_no_damage_is_no_registered():
@@ -55,6 +56,7 @@ def test_real_flood_no_damage_is_no_registered():
     assert flood["value"] is False
     # Sin daño 2014 NO es "seguro".
     assert "seguro" in flood["explanation"]["not_meaning"].lower()
+    assert result["ml"]["experiment"]["locality"]["recorded"] == "sin_dano"
 
 
 def test_real_flood_null_is_insufficient():
@@ -134,7 +136,9 @@ def test_catalogs_real():
     assert "riesgos_naturales_localidades" in source_ids
     assert len(list_layers()) >= 40
     assert len(list_locations()) == 755
-    assert ml_status()["status"] == "DISABLED_PENDING_TARGET_VALIDATION"
+    status = ml_status()
+    assert status["enabled"] is True
+    assert status["status"] == "HISTORICAL_EXPERIMENT"
 
 
 def test_locations_carry_cvegeo_and_crs_unknown():

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ArrowLeft, FileText, Printer, Info } from "lucide-react";
 import { Badge, Button, Logo, Notice } from "../components/UI";
-import { CoverageSummary } from "../components/Analysis";
+import { CoverageSummary, MachineLearningPanel } from "../components/Analysis";
 import {
   PROJECTS,
   coreFactors,
@@ -43,7 +43,7 @@ function ReportFooter({ page }) {
     </footer>
   );
 }
-export function Report({ result, sources, onBack }) {
+export function Report({ result, sources, showPredictive, onBack }) {
   const [issuedAt] = useState(() =>
     new Date().toLocaleString("es-MX", {
       dateStyle: "medium",
@@ -154,6 +154,7 @@ export function Report({ result, sources, onBack }) {
               ))}
             </div>
           </section>
+          {showPredictive && <MachineLearningPanel ml={result.ml} />}
           <Notice>{result.disclaimer}</Notice>
           <ReportFooter page={1} />
         </article>
@@ -301,7 +302,7 @@ export function Report({ result, sources, onBack }) {
               {[
                 ...new Set([
                   "Coordenadas recibidas: CRS_UNKNOWN. No reproyectadas.",
-                  "Machine Learning no activo.",
+                  ...(showPredictive && result.ml?.reason ? [result.ml.reason] : []),
                   ...result.limitations,
                 ]),
               ].map((item, i) => (

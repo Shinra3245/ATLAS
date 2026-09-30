@@ -51,19 +51,6 @@ test("logo y nombre del mockup aparecen en todas las vistas", async ({
       )
       .toBe(true);
   }
-  await page.goto("/#/loaders");
-  await expect(page.locator(".lp-header .brand-mark")).toBeVisible();
-  await expect(page.locator(".lp-header .brand-wordmark")).toBeVisible();
-  await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.locator(".lp-header .brand-wordmark")).toHaveCSS(
-    "width",
-    "145px",
-  );
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth + 1,
-    ),
-  ).toBe(true);
   await page.setViewportSize({ width: 1280, height: 720 });
   await chooseA(page);
   await page.getByRole("button", { name: "Ver ficha", exact: true }).click();
@@ -242,7 +229,7 @@ test("móvil: landing y análisis sin desbordamiento horizontal", async ({
   await expect(page.locator(".guide-bubble-prompt")).toBeHidden();
   await page.getByRole("button", { name: "Mostrar la explicación" }).click();
   await expect(page.locator(".guide-bubble")).toContainText(
-    "Empieza en Explorar ATLAS",
+    "¿Cómo puedo ayudarte?",
   );
   await page.getByRole("button", { name: "Ocultar la explicación" }).click();
   await expect(page.locator(".guide-bubble-prompt")).toBeHidden();

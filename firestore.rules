@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isPlan(value) {
+      return value in ["basico", "profesional", "max", "estudiante", "cliente"];
+    }
+
+    function validUsage(data) {
+      let keys = data.keys();
+      let hasMonth = keys.hasAny(["usageMonth"]);
+      let hasCount = keys.hasAny(["analysisCount"]);
+      return hasMonth == hasCount
+        && (!hasMonth || (
+          data.usageMonth is string
+          && data.usageMonth.matches('^[0-9]{4}-[0-9]{2}$')
+          && data.analysisCount is int
+          && data.analysisCount >= 0
+          && data.analysisCount <= 10
+        ));
+    }
+
+    function validIdentity(data) {
+      return (!data.keys().hasAny(["fullName"]) ||
+        (data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 100))
+        && (!data.keys().hasAny(["institution"]) ||
+          (data.institution is string && data.institution.size() >= 2 && data.institution.size() <= 120));
+    }
+
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      allow create: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly(["email", "plan", "role", "createdAt", "updatedAt", "fullName", "institution"])
+        && request.resource.data.email is string
+        && (request.auth.token.email == null || request.resource.data.email == request.auth.token.email)
+        && request.resource.data.plan == "basico"
+        && request.resource.data.role == "basico"
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.updatedAt is timestamp
+        && validIdentity(request.resource.data);
+
+      allow update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.keys().hasOnly(["email", "plan", "role", "createdAt", "updatedAt", "usageMonth", "analysisCount", "fullName", "institution"])
+        && isPlan(request.resource.data.role)
+        && (!request.resource.data.keys().hasAny(["plan"]) || request.resource.data.plan == request.resource.data.role)
+        && validUsage(request.resource.data)
+        && validIdentity(request.resource.data);
+    }
+  }
+}

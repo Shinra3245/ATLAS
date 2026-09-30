@@ -20,6 +20,6 @@ result = analyze_location({"lat": 20.674, "lon": -101.349}, "building").to_dict(
 - Fuente de producción: `data/contracts/DATA_CONTRACT_V1.md` + `data/processed/v1/`
   (mientras no existan, los factores se reportan como información insuficiente o
   bloqueada, nunca como "riesgo bajo"). No se leen `data/incoming/**` ni `data/raw/**`.
-- ML permanece `DISABLED_PENDING_TARGET_VALIDATION`; ATLAS funciona sin ML.
+- ML publica `HISTORICAL_EXPERIMENT` sobre daño por inundación en 2014 y no asigna una susceptibilidad. El análisis SIG funciona igual si ese bloque no se muestra.
 - Las coordenadas se validan como finitas y dentro de rangos globales. Toda asociación aproximada al punto de una localidad incluye una nota que distingue localidad de predio.
 - La clave explícita de localidad tiene prioridad: sus coordenadas canónicas se recuperan del contrato, sin interpretar coordenadas auxiliares como cobertura de un predio.

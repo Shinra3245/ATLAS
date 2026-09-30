@@ -87,3 +87,7 @@ Thumbs.db
 
 # Catálogo local de habilidades, no parte del producto
 /.skills-shared/
+
+# Paquetes y evidencia local de despliegue
+/.deploy/
+firebase-debug.log

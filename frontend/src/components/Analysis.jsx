@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   ChevronRight,
   FileText,
@@ -168,8 +168,61 @@ export function ContextSection({ result, onEvidence }) {
     </section>
   );
 }
+export function MachineLearningPanel({ ml, compact = false }) {
+  const experiment = ml?.experiment;
+  if (!ml?.enabled || !experiment) {
+    return (
+      <Notice>
+        Machine Learning no activo. El análisis funciona con la evidencia y los
+        criterios publicados.
+      </Notice>
+    );
+  }
+  const features = experiment.features.map((feature) => feature.label).join(", ");
+  return (
+    <section className="ml-panel" aria-label="Aprendizaje automático">
+      <div className="block-heading">
+        <h2>Aprendizaje automático</h2>
+        <span>Experimento de 2014 · no es riesgo actual</span>
+      </div>
+      <h3>{experiment.name}</h3>
+      <dl>
+        <dt>Esta localidad</dt>
+        <dd>{experiment.locality.recorded_label}</dd>
+        <dt>Lectura del modelo</dt>
+        <dd>{experiment.locality.reading}</dd>
+      </dl>
+      {!compact && (
+        <>
+          <p>{experiment.target_meaning}</p>
+          <p>
+            {experiment.validation.strategy} {experiment.validation.baseline}
+          </p>
+          <ul>
+            {experiment.validation.holdouts.map((holdout) => (
+              <li key={holdout.held_out}>
+                Prueba en {holdout.held_out}: precisión{" "}
+                {(holdout.precision * 100).toFixed(1)} %,{" "}
+                {holdout.true_positives} aciertos y {holdout.false_positives}{" "}
+                marcas sin ese daño.
+              </li>
+            ))}
+          </ul>
+          <p>Variables usadas: {features}.</p>
+          <ul>
+            {experiment.limitations.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </>
+      )}
+    </section>
+  );
+}
 export function AnalysisPanel({
   result,
+  revealed,
+  onGenerate,
   onEvidence,
   onCompare,
   onNew,
@@ -177,6 +230,11 @@ export function AnalysisPanel({
   onBack,
 }) {
   const main = coreFactors(result);
+  const revealRef = useRef(null);
+  useEffect(() => {
+    if (!revealed) return;
+    revealRef.current?.focus();
+  }, [revealed]);
   return (
     <>
       <div className="panel-heading">
@@ -209,6 +267,21 @@ export function AnalysisPanel({
         title="Información de los factores núcleo"
         compact
       />
+      <div className="predictive-slot">
+        {revealed ? (
+          <div ref={revealRef} tabIndex={-1} aria-live="polite">
+            <MachineLearningPanel ml={result.ml} />
+          </div>
+        ) : (
+          <>
+            <p>
+              El análisis territorial ya está listo. Genera la lectura
+              predictiva solo si quieres verla.
+            </p>
+            <Button onClick={onGenerate}>Generar predicción</Button>
+          </>
+        )}
+      </div>
       <ContextSection result={result} onEvidence={onEvidence} />
       <details className="more-details">
         <summary>Cobertura total y aspectos a revisar</summary>
@@ -222,11 +295,6 @@ export function AnalysisPanel({
             <li key={i}>{item}</li>
           ))}
         </ul>
-        <Notice>
-          {result.ml?.enabled
-            ? result.ml.reason
-            : "Machine Learning no activo. El análisis funciona con la evidencia y los criterios publicados."}
-        </Notice>
       </details>
       <Notice tone="warning">{result.disclaimer}</Notice>
       <div className="panel-actions">
@@ -421,11 +489,12 @@ export function SelectionPanel({
       <Button
         className="full-width"
         icon={side === "B" ? Scale : Search}
+        loading={busy}
         disabled={!selected || busy || duplicate}
         onClick={onAnalyze}
       >
         {busy
-          ? "Consultando el motor…"
+          ? side === "B" ? "Comparando localidades…" : "Analizando localidad…"
           : side === "B"
             ? "Analizar B y comparar"
             : "Analizar localidad"}

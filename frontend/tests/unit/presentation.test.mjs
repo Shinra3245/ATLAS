@@ -5,6 +5,7 @@ import {
   asLocation,
   filterLocations,
   formatValue,
+  plainDifference,
   metadataText,
   summarize,
   validExternalUrl,
@@ -24,6 +25,63 @@ test("nulos no se convierten en cero o seguridad", () => {
   );
   assert.equal(formatValue(1, null, "flood_history"), "Antecedente registrado");
   assert.match(STATUS.NO_REGISTERED_CONDITION.description, /No significa/);
+});
+test("la diferencia observable se lee en frases cortas", () => {
+  assert.equal(
+    plainDifference({
+      factor: "slope",
+      status_a: "DATA_AVAILABLE",
+      status_b: "PARTIAL_DATA",
+      value_a: 14,
+      value_b: 9,
+      unit: "%",
+    }),
+    "En A: 14 %. En B: 9 %.",
+  );
+  assert.equal(
+    plainDifference({
+      factor: "elevation",
+      status_a: "DATA_AVAILABLE",
+      status_b: "DATA_AVAILABLE",
+      value_a: 1720,
+      value_b: 1720,
+      unit: "m",
+    }),
+    "En A y en B el dato es el mismo: 1,720 m.",
+  );
+  assert.equal(
+    plainDifference({
+      factor: "land_use",
+      status_a: "DATA_AVAILABLE",
+      status_b: "INSUFFICIENT_DATA",
+      value_a: "agrícola",
+      value_b: null,
+      unit: null,
+    }),
+    "Solo está en A: agrícola. En B no hay información para comparar.",
+  );
+  assert.equal(
+    plainDifference({
+      factor: "faults",
+      status_a: "INSUFFICIENT_DATA",
+      status_b: "BLOCKED_DATA_VALIDATION",
+      value_a: null,
+      value_b: null,
+      unit: null,
+    }),
+    "No hay información para comparar este dato.",
+  );
+  assert.equal(
+    plainDifference({
+      factor: "flood_history",
+      status_a: "DATA_AVAILABLE",
+      status_b: "DATA_AVAILABLE",
+      value_a: 1,
+      value_b: 0,
+      unit: "binary_code",
+    }),
+    "En A: Antecedente registrado. En B: Sin antecedente registrado.",
+  );
 });
 test("los estados son de disponibilidad y preservan las seis variantes", () => {
   assert.equal(Object.keys(STATUS).length, 6);

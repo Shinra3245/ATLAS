@@ -28,15 +28,16 @@ def test_meta_covers_only_irapuato_and_celaya(client):
     assert body["supported_municipalities"] == ["Irapuato", "Celaya"]
     assert body["supported_area"]["state_coverage"] == "future"
     assert body["project_types"] == ["housing", "building", "road"]
-    assert body["ml_status"] == "DISABLED_PENDING_TARGET_VALIDATION"
+    assert body["ml_status"] == "HISTORICAL_EXPERIMENT"
 
 
-def test_ml_status_starts_disabled(client):
+def test_ml_status_publishes_historical_experiment(client):
     response = client.get("/api/ml/status")
     assert response.status_code == 200
     body = response.json()
-    assert body["enabled"] is False
-    assert body["status"] == "DISABLED_PENDING_TARGET_VALIDATION"
+    assert body["enabled"] is True
+    assert body["status"] == "HISTORICAL_EXPERIMENT"
+    assert "2014" in body["reason"]
 
 
 def test_sources_and_layers_come_from_the_engine(client):
@@ -171,8 +172,10 @@ def test_real_engine_analyze_preserves_data_status(client):
     assert "INSUFFICIENT_DATA" in statuses
     assert "LOW_RISK" not in statuses
     assert "SAFE" not in statuses
-    assert body["ml"]["enabled"] is False
-    assert body["ml"]["status"] == "DISABLED_PENDING_TARGET_VALIDATION"
+    assert body["ml"]["enabled"] is True
+    assert body["ml"]["status"] == "HISTORICAL_EXPERIMENT"
+    assert body["ml"]["experiment"]["validation"]["useful_for_a_decision"] is False
+    assert body["ml"]["experiment"]["locality"]["recorded"] == "sin_dato"
     assert_no_forbidden(body)
 
 
@@ -388,6 +391,25 @@ def test_compare_same_locality_via_distinct_coordinates_is_rejected(client):
     )
     assert response.status_code == 422
     assert response.json()["error"] == "SAME_LOCATION"
+
+
+def test_pending_core_layers_never_published_as_available(client):
+    """Garantía obligatoria en el borde HTTP: una capa faltante nunca sale como
+    dato disponible ni como riesgo bajo (motor real, sin doble)."""
+    response = client.post("/api/analyze", json=ANALYZE)
+    assert response.status_code == 200
+    body = response.json()
+    conditions = body["conditions"] + body["territorial_factors"] + body["context"]
+    by_factor = {c["factor"]: c for c in conditions}
+    for factor in ("slope", "faults", "landslide_susceptibility", "land_use"):
+        assert factor in by_factor, factor
+        assert by_factor[factor]["status"] in {
+            "BLOCKED_DATA_VALIDATION",
+            "INSUFFICIENT_DATA",
+        }, (factor, by_factor[factor]["status"])
+    for token in ("LOW_RISK", "RIESGO_BAJO", "SIN_RIESGO"):
+        assert token not in response.text
+    assert_no_forbidden(body)
 
 
 def test_analyze_explicit_locality_uses_canonical_coordinates(client):

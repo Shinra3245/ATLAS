@@ -6,21 +6,10 @@ import "@fontsource/manrope/latin-600.css";
 import "@fontsource/manrope/latin-700.css";
 import "@fontsource/manrope/latin-800.css";
 import App from "./App";
-import { LoaderShowcase } from "./pages/LoaderShowcase";
+import { AccountProvider } from "./hooks/useAccount";
 import "./styles.css";
+import "./public-ui.css";
 import "./print.css";
-
-function ViewRouter() {
-  const [preview, setPreview] = React.useState(
-    () => window.location.hash === "#/loaders",
-  );
-  React.useEffect(() => {
-    const update = () => setPreview(window.location.hash === "#/loaders");
-    window.addEventListener("hashchange", update);
-    return () => window.removeEventListener("hashchange", update);
-  }, []);
-  return preview ? <LoaderShowcase /> : <App />;
-}
 
 class ErrorBoundary extends React.Component {
   state = { failed: false };
@@ -53,7 +42,9 @@ class ErrorBoundary extends React.Component {
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <ViewRouter />
+      <AccountProvider>
+        <App />
+      </AccountProvider>
     </ErrorBoundary>
   </React.StrictMode>,
 );
