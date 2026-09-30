@@ -23,7 +23,7 @@ def meta(adapter: EngineAdapter = Depends(get_engine_adapter)) -> dict[str, Any]
             "municipalities": list(SUPPORTED_MUNICIPALITIES),
             "state_coverage": "future",
             "note": (
-                "El MVP cubre únicamente Irapuato y Celaya. "
+                "ATLAS cubre únicamente Irapuato y Celaya. "
                 "Guanajuato completo es implementación futura."
             ),
         },

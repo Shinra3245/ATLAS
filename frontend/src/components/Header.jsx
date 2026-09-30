@@ -108,7 +108,7 @@ export function Header({ context = "landing" }) {
     <header className={`site-header system-header ${publicView ? "public-header" : ""} ${auth ? "auth-header" : ""} ${context === "workspace" ? "workspace-header" : ""}`}>
       <div className="header-inner">
         <Logo light />
-        <span className="header-location"><MapPin size={16} aria-hidden="true" /> MVP Irapuato + Celaya</span>
+        <span className="header-location"><MapPin size={16} aria-hidden="true" /> Irapuato + Celaya</span>
         <button
           className="icon-button menu-toggle"
           aria-label={open ? "Cerrar menú" : "Abrir menú"}

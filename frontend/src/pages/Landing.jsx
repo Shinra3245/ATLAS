@@ -82,7 +82,7 @@ const audiences = [
 const faqs = [
   [
     "¿Dónde funciona ATLAS?",
-    "El MVP cubre exclusivamente las localidades publicadas de Irapuato y Celaya. El resto de Guanajuato es una implementación futura.",
+    "ATLAS cubre exclusivamente las localidades publicadas de Irapuato y Celaya. El resto de Guanajuato es una implementación futura.",
   ],
   [
     "¿Qué tipos de proyecto puedo consultar?",
@@ -357,7 +357,7 @@ export function Landing({ catalog }) {
       <footer className="site-footer container">
         <div>
           <Logo />
-          <small>MVP: Irapuato y Celaya · HackaTec / InnovaTecNM 2026</small>
+          <small>Irapuato y Celaya · HackaTec / InnovaTecNM 2026</small>
         </div>
         <nav aria-label="Información del proyecto">
           <a href="#/metodologia">Metodología</a>

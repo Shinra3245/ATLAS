@@ -119,7 +119,7 @@ export function Report({ result, sources, showPredictive, onBack }) {
               <dt>Identificador del análisis</dt>
               <dd>{result.analysis_id}</dd>
               <dt>Versión del motor</dt>
-              <dd>{result.engine_version}</dd>
+              <dd>{result.engine_version.replace(/-mvp$/i, "")}</dd>
               <dt>Versión del esquema</dt>
               <dd>{result.schema_version}</dd>
               <dt>Fecha de emisión de esta ficha</dt>

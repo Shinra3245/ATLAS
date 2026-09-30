@@ -43,7 +43,7 @@ export const STATUS = {
       "Existe un candidato que todavía no está validado para este análisis.",
   },
   OUTSIDE_SUPPORTED_AREA: {
-    label: "Fuera del alcance del MVP",
+    label: "Fuera del área de cobertura",
     tone: "outside",
     description: "Selecciona una localidad publicada de Irapuato o Celaya.",
   },
@@ -74,7 +74,7 @@ export const FACTOR_NAMES = {
 };
 const SOURCE_NAMES = {
   core_geospatial: "Datos censales y cartografía territorial compilados",
-  statewide_census: "Información censal de Guanajuato filtrada al MVP",
+  statewide_census: "Información censal de Irapuato y Celaya",
   climate_celaya: "Registros de precipitación de Celaya",
   climate_irapuato: "Registros de precipitación de Irapuato",
   subbasins_state: "Referencia de subcuencas de Guanajuato",
@@ -129,7 +129,8 @@ export function sourceCoverageText(source) {
     return "Irapuato y Celaya; indicador municipal repetido por localidad";
   return (source.coverage_note || "Cobertura no documentada")
     .replace(/SOURCE_PROVENANCE_PARTIAL;?\s*/g, "")
-    .replace(/UNKNOWN/g, "no documentada");
+    .replace(/UNKNOWN/g, "no documentada")
+    .replace(/extracción MVP/gi, "extracción de Irapuato y Celaya");
 }
 export function sourceOriginText(factor) {
   const source = factor?.source;

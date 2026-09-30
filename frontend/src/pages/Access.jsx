@@ -102,7 +102,7 @@ export function Access({ mode = "login" }) {
       <div className="auth-city auth-city-celaya" aria-hidden="true"><span />Celaya</div>
       <div className="auth-layout">
         <section className="auth-intro" aria-label="Acerca de ATLAS">
-          <span className="auth-kicker"><MapPin size={16} /> Irapuato + Celaya · MVP</span>
+          <span className="auth-kicker"><MapPin size={16} /> Irapuato + Celaya</span>
           <h1>{registering ? <>Crea tu cuenta<br />en ATLAS</> : <>Accede a tu<br />análisis territorial</>}</h1>
           <p className="auth-intro-lead">
             {registering
@@ -119,7 +119,7 @@ export function Access({ mode = "login" }) {
           </div>
         </section>
         <section className="auth-card" aria-labelledby="auth-title">
-          {!registering && <div className="auth-card-brand"><Logo /><span>MVP Irapuato + Celaya</span></div>}
+          {!registering && <div className="auth-card-brand"><Logo /><span>Irapuato + Celaya</span></div>}
           <span className="auth-accent" aria-hidden="true" />
           {account.ready && account.user ? (
             <div className="auth-signed-in">
